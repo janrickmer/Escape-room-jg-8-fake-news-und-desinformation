@@ -1,0 +1,2824 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>Der Fall @lichtenberg.leaks · Fake News im Netz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   DER FALL @LICHTENBERG.LEAKS — Escape Room
+   Politik & Wirtschaft · Jg. 8 · Fake News im Netz
+   Helles Design · Instagram-Farbwelt (Gelb–Orange–Magenta–Lila–Blau)
+   ============================================================ */
+
+:root{
+  --bg:           #fafafa;
+  --bg-soft:      #f2f3f5;
+  --surface:      #ffffff;
+  --surface-alt:  #f7f8fa;
+  --ink:          #262626;
+  --ink-soft:     #444444;
+  --ink-mute:     #8e8e8e;
+  --ig-yellow:    #feda75;
+  --ig-orange:    #fa7e1e;
+  --ig-magenta:   #d62976;
+  --ig-purple:    #962fbf;
+  --ig-blue:      #4f5bd5;
+  --link-blue:    #0095f6;
+  --primary:      #d62976;
+  --primary-dark: #b01f5f;
+  --primary-soft: #fbe7f1;
+  --accent:       #fa7e1e;
+  --accent-soft:  #fef0e0;
+  --purple-soft:  #f3eafa;
+  --blue-soft:    #e7f4fe;
+  --success:      #1f9e54;
+  --success-bg:   #e8f6ee;
+  --error:        #ed4956;
+  --error-bg:     #fdeceb;
+  --missed:       #e08a00;
+  --missed-bg:    #fdf3e0;
+  --border:       #dbdbdb;
+  --border-soft:  #ececec;
+  --ig-grad:      linear-gradient(45deg,#feda75 0%,#fa7e1e 28%,#d62976 55%,#962fbf 80%,#4f5bd5 100%);
+  --shadow-sm:    0 1px 3px rgba(38,38,38,0.07), 0 1px 2px rgba(38,38,38,0.05);
+  --shadow-md:    0 8px 26px rgba(150,47,191,0.12), 0 2px 6px rgba(38,38,38,0.06);
+  --font-display: 'Poppins', -apple-system, 'Segoe UI', sans-serif;
+  --font-body:    'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono:    'IBM Plex Mono', 'Menlo', 'Courier New', monospace;
+}
+
+*{ box-sizing:border-box; margin:0; padding:0; }
+
+html,body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:var(--font-body);
+  font-weight:400;
+  line-height:1.65;
+  min-height:100vh;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+body::before{
+  content:'';
+  position:fixed; inset:0; z-index:-2;
+  background:
+    radial-gradient(ellipse at 8% 6%, rgba(214,41,118,0.06) 0%, transparent 45%),
+    radial-gradient(ellipse at 94% 10%, rgba(79,91,213,0.06) 0%, transparent 40%),
+    radial-gradient(ellipse at 90% 94%, rgba(250,126,30,0.07) 0%, transparent 45%),
+    linear-gradient(180deg, var(--bg) 0%, var(--bg-soft) 100%);
+  pointer-events:none;
+}
+
+.app{ min-height:100vh; display:flex; flex-direction:column; }
+
+/* ---------- Topbar ---------- */
+.topbar{
+  position:sticky; top:0; z-index:50;
+  background:rgba(255,255,255,0.9);
+  backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border-soft);
+  padding:12px 26px;
+  display:flex; align-items:center; justify-content:space-between; gap:20px;
+}
+.topbar-brand{
+  display:flex; align-items:center; gap:11px;
+  font-family:var(--font-display); font-weight:600; font-size:15px;
+  letter-spacing:0.01em;
+  background:var(--ig-grad);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+.topbar-brand svg{ width:24px; height:24px; stroke:var(--ig-magenta); fill:none; }
+.topbar-progress{ display:flex; gap:6px; align-items:center; flex-wrap:wrap; }
+.seal{
+  width:31px; height:31px; border-radius:50%;
+  border:2px solid var(--border); background:var(--surface);
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--font-mono); font-size:11px; font-weight:600;
+  color:var(--ink-mute); transition:all .35s cubic-bezier(.4,0,.2,1);
+}
+.seal.library{
+  width:9px; height:9px; border-radius:50%; border:none;
+  background:var(--border);
+}
+.seal.library.active{ background:var(--ig-magenta); }
+.seal.library.visited{ background:var(--ig-orange); }
+.seal.active{
+  border:3px double transparent;
+  background-image:linear-gradient(var(--surface),var(--surface)), var(--ig-grad);
+  background-origin:border-box; background-clip:content-box, border-box;
+  color:var(--ink); font-weight:700;
+}
+.seal.solved{
+  background:var(--ig-grad); border:none; color:#fff;
+  font-family:var(--font-display); font-weight:700; font-size:14px; transform:rotate(-4deg);
+  box-shadow:0 2px 8px rgba(214,41,118,0.35);
+}
+
+/* ---------- Layout ---------- */
+.main{ flex:1; display:flex; align-items:flex-start; justify-content:center; padding:52px 22px 64px; }
+.screen{ width:100%; max-width:880px; animation:screenIn .55s cubic-bezier(.16,1,.3,1) both; }
+@keyframes screenIn{ from{opacity:0; transform:translateY(18px);} to{opacity:1; transform:translateY(0);} }
+
+.site-footer{
+  text-align:center; font-size:11px; color:var(--ink-mute);
+  padding:18px 12px 22px; border-top:1px solid var(--border-soft);
+  font-family:var(--font-mono); letter-spacing:0.02em;
+}
+
+/* ---------- Typography ---------- */
+h1,h2,h3{ font-family:var(--font-display); font-weight:700; line-height:1.15; color:var(--ink); letter-spacing:-0.01em; }
+.kicker{
+  font-family:var(--font-mono); font-size:11px; font-weight:600; letter-spacing:0.18em;
+  text-transform:uppercase; color:var(--ig-magenta); margin-bottom:14px;
+  display:flex; align-items:center; gap:11px;
+}
+.kicker::before{ content:''; width:26px; height:2px; background:var(--ig-grad); display:inline-block; border-radius:2px; }
+.title-mega{ font-size:clamp(38px,7vw,64px); font-weight:800; line-height:1.05; margin-bottom:20px; letter-spacing:-0.025em; }
+.title-mega em{
+  font-style:normal; font-weight:800;
+  background:var(--ig-grad);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+.lede{ font-family:var(--font-body); font-size:clamp(16.5px,2vw,19.5px); font-weight:400; line-height:1.55; color:var(--ink-soft); max-width:62ch; margin-bottom:28px; }
+.section-title{ font-size:clamp(28px,4vw,40px); font-weight:700; margin-bottom:8px; }
+p{ margin-bottom:14px; }
+p.body-lg{ font-size:16.5px; line-height:1.7; }
+.text-mute{ color:var(--ink-mute); }
+
+/* ---------- Cards ---------- */
+.card{
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:14px; padding:28px 32px; margin-bottom:22px; box-shadow:var(--shadow-sm); position:relative;
+}
+.card-accent::before{
+  content:''; position:absolute; left:0; top:20px; bottom:20px; width:4px;
+  background:var(--ig-grad); border-radius:0 3px 3px 0;
+}
+.briefing{ font-family:var(--font-body); font-size:16px; line-height:1.7; color:var(--ink); padding-left:18px; }
+.briefing .speaker{
+  display:block; font-family:var(--font-mono); font-style:normal; font-size:10px; font-weight:600;
+  letter-spacing:0.18em; text-transform:uppercase; color:var(--ig-magenta); margin-bottom:8px;
+}
+
+/* ---------- Instagram-Post-Karte ---------- */
+.ig-post{
+  background:var(--surface); border:1px solid var(--border); border-radius:14px;
+  margin:14px 0; overflow:hidden; box-shadow:var(--shadow-sm);
+  max-width:560px;
+}
+.ig-post.slim{ margin:10px 0; }
+.ig-head{ display:flex; align-items:center; gap:10px; padding:11px 14px; border-bottom:1px solid var(--border-soft); }
+.ig-ava{
+  width:34px; height:34px; border-radius:50%; flex-shrink:0;
+  border:2.5px double transparent;
+  background-image:linear-gradient(var(--surface),var(--surface)), var(--ig-grad);
+  background-origin:border-box; background-clip:content-box, border-box;
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--font-display); font-weight:700; font-size:13px; color:var(--ig-magenta);
+}
+.ig-user{ font-family:var(--font-display); font-weight:600; font-size:13.5px; color:var(--ink); line-height:1.2; }
+.ig-time{ font-size:11px; color:var(--ink-mute); }
+.ig-body{ padding:14px 16px 6px; font-size:14.5px; line-height:1.6; }
+.ig-body .tag{ color:var(--link-blue); font-weight:600; }
+.ig-foot{ display:flex; align-items:center; gap:14px; padding:8px 14px 12px; }
+.ig-foot svg{ width:21px; height:21px; stroke:var(--ink); fill:none; stroke-width:1.8; }
+.ig-foot svg.liked{ stroke:var(--error); fill:var(--error); }
+.ig-likes{ font-size:12.5px; font-weight:600; color:var(--ink); }
+.ig-note{ padding:0 16px 12px; font-size:11.5px; color:var(--ink-mute); }
+
+/* ---------- Buttons ---------- */
+.btn{
+  display:inline-flex; align-items:center; gap:9px; padding:13px 26px; border:none; border-radius:10px;
+  font-family:var(--font-body); font-size:13.5px; font-weight:600; letter-spacing:0.02em;
+  cursor:pointer; transition:all .22s cubic-bezier(.4,0,.2,1); text-decoration:none;
+}
+.btn-primary{ background:var(--ig-grad); color:#fff; box-shadow:0 2px 10px rgba(214,41,118,0.28); }
+.btn-primary:hover{ transform:translateY(-1px); box-shadow:var(--shadow-md); filter:saturate(1.08); }
+.btn-ghost{ background:var(--surface); color:var(--ink); border:1.5px solid var(--border); }
+.btn-ghost:hover{ border-color:var(--ig-magenta); color:var(--ig-magenta); }
+.btn-arrow::after{ content:'\2192'; font-family:var(--font-mono); font-size:15px; }
+.btn-row{ display:flex; gap:14px; flex-wrap:wrap; margin-top:22px; align-items:center; }
+
+/* ---------- Inputs ---------- */
+.field-label{ display:block; font-family:var(--font-mono); font-size:10px; font-weight:600; letter-spacing:0.16em; text-transform:uppercase; color:var(--ig-magenta); margin-bottom:6px; }
+.text-input{
+  width:100%; padding:12px 14px; background:var(--surface-alt); border:1.5px solid var(--border);
+  border-radius:10px; color:var(--ink); font-family:var(--font-body); font-size:15px;
+}
+.text-input:focus{ outline:none; border-color:var(--link-blue); background:#fff; box-shadow:0 0 0 3px rgba(0,149,246,0.12); }
+.input-error{ display:none; margin-top:14px; padding:10px 14px; background:var(--error-bg); border-left:3px solid var(--error); color:var(--ink); font-size:13px; border-radius:6px; }
+
+/* ---------- Room header ---------- */
+.room-header{ display:flex; align-items:flex-start; gap:18px; margin-bottom:18px; }
+.room-number{
+  font-family:var(--font-display); font-size:46px; font-weight:800; line-height:0.9;
+  background:var(--ig-grad); -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+.room-location{ font-family:var(--font-mono); font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--ink-mute); }
+.room-name{ font-family:var(--font-display); font-size:25px; font-weight:700; color:var(--ink); }
+
+/* ---------- Library ---------- */
+.library-banner{
+  display:flex; gap:14px; align-items:flex-start; background:var(--purple-soft);
+  border:1px solid rgba(150,47,191,0.25); border-radius:12px; padding:16px 18px; margin-bottom:26px;
+}
+.library-banner svg{ width:22px; height:22px; stroke:var(--ig-purple); fill:none; flex-shrink:0; margin-top:2px; }
+.library-banner .warn{ display:block; margin-top:6px; color:var(--ig-purple); font-weight:600; font-size:13.5px; }
+.lib-section{ margin-bottom:22px; }
+.lib-section-title{ font-family:var(--font-display); font-size:18.5px; font-weight:700; color:var(--ig-magenta); margin-bottom:8px; }
+.lib-bullets{ margin:8px 0 0 20px; }
+.lib-bullets li{ margin-bottom:7px; }
+.lib-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-top:12px; }
+@media(max-width:600px){ .lib-grid{ grid-template-columns:1fr; } }
+.lib-card{ background:var(--surface-alt); border:1px solid var(--border-soft); border-radius:12px; padding:14px 16px; }
+.lib-card-sub{ font-family:var(--font-mono); font-size:9.5px; letter-spacing:0.12em; text-transform:uppercase; color:var(--ig-orange); }
+.lib-card-title{ font-family:var(--font-display); font-size:16px; font-weight:700; margin:2px 0 5px; }
+.lib-card-body{ font-size:13.5px; color:var(--ink-soft); }
+.lib-table{ width:100%; border-collapse:collapse; margin-top:10px; font-size:14px; }
+.lib-table th,.lib-table td{ text-align:left; padding:9px 11px; border-bottom:1px solid var(--border-soft); vertical-align:top; }
+.lib-table th{ font-family:var(--font-mono); font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-mute); }
+.lib-warning-bar{
+  display:flex; gap:12px; align-items:center; background:var(--accent-soft);
+  border:1px solid rgba(250,126,30,0.35); border-radius:12px; padding:14px 18px; margin:22px 0;
+}
+.lib-warning-bar svg{ width:22px; height:22px; stroke:var(--ig-orange); fill:none; flex-shrink:0; }
+.note-box{
+  background:var(--surface-alt); border-left:3px solid var(--ig-magenta); border-radius:8px;
+  padding:12px 16px; margin:14px 0; font-size:14.5px;
+}
+.note-box .note-label{
+  display:block; font-family:var(--font-mono); font-size:10px; font-weight:600;
+  letter-spacing:0.14em; text-transform:uppercase; color:var(--ig-magenta); margin-bottom:5px;
+}
+
+/* ---------- Zwei-Perspektiven-Karten (Akte 3) ---------- */
+.persp-grid{ display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:12px; }
+@media(max-width:640px){ .persp-grid{ grid-template-columns:1fr; } }
+.persp-card{ background:var(--surface-alt); border:1px solid var(--border-soft); border-radius:12px; padding:16px 18px; border-top:4px solid var(--link-blue); }
+.persp-card.crit{ border-top-color:var(--ig-orange); }
+.persp-card .pc-tag{ font-family:var(--font-mono); font-size:9.5px; letter-spacing:0.14em; text-transform:uppercase; font-weight:600; color:var(--link-blue); }
+.persp-card.crit .pc-tag{ color:var(--ig-orange); }
+.persp-card h4{ font-family:var(--font-display); font-size:15.5px; margin:3px 0 7px; }
+.persp-card ul{ margin:0 0 0 18px; font-size:13.5px; color:var(--ink-soft); }
+.persp-card li{ margin-bottom:6px; }
+
+/* ---------- Chart / Schaubild ---------- */
+.chart-wrap{
+  text-align:center; margin:18px 0;
+  padding:20px 18px 14px;
+  background:var(--surface-alt);
+  border:1px solid var(--border-soft);
+  border-radius:12px;
+}
+.chart-wrap svg{ max-width:540px; width:100%; height:auto; display:block; margin:0 auto; }
+.chart-caption{
+  font-family:var(--font-mono); font-size:10.5px; letter-spacing:0.08em;
+  color:var(--ink-mute); margin-top:6px; line-height:1.45;
+}
+
+/* ---------- Puzzle: single choice ---------- */
+.mc-question{ margin-bottom:24px; }
+.mc-q-text{ font-weight:600; font-size:16px; margin-bottom:12px; }
+.mc-option{
+  display:flex; align-items:flex-start; gap:11px; width:100%; text-align:left;
+  padding:13px 16px; margin-bottom:9px; background:var(--surface); border:1.5px solid var(--border);
+  border-radius:10px; cursor:pointer; font-size:14.5px; line-height:1.5; transition:all .18s ease; font-family:var(--font-body); color:var(--ink);
+}
+.mc-option:hover{ border-color:var(--link-blue); }
+.mc-option .dot{ width:18px; height:18px; border-radius:50%; border:2px solid var(--border); flex-shrink:0; margin-top:1px; }
+.mc-option.selected{ border-color:var(--link-blue); background:var(--blue-soft); }
+.mc-option.selected .dot{ border-color:var(--link-blue); background:var(--link-blue); box-shadow:inset 0 0 0 3px var(--surface); }
+.mc-option.correct{ border-color:var(--success); background:var(--success-bg); }
+.mc-option.incorrect{ border-color:var(--error); background:var(--error-bg); }
+
+/* ---------- Puzzle: cloze (freie Eingabe) + matching dropdowns ---------- */
+.cloze{ font-size:16px; line-height:2.4; }
+.cloze-input{
+  display:inline-block; width:185px; max-width:60vw;
+  font-family:var(--font-body); font-size:14.5px; font-weight:600; color:var(--ink);
+  background:var(--surface); border:1.5px solid var(--ig-purple); border-radius:8px;
+  padding:5px 10px; margin:0 3px; vertical-align:baseline;
+}
+.cloze-input:focus{ outline:none; border-color:var(--link-blue); box-shadow:0 0 0 3px rgba(0,149,246,0.12); }
+.cloze-input.ok{ border-color:var(--success); background:var(--success-bg); color:var(--success); }
+.cloze-input.bad{ border-color:var(--error); background:var(--error-bg); color:var(--error); }
+.cloze select, .match-select{
+  font-family:var(--font-body); font-size:14px; font-weight:600; color:var(--ig-purple);
+  background:var(--purple-soft); border:1.5px solid var(--ig-purple); border-radius:8px; padding:5px 8px; margin:0 2px;
+  max-width:100%;
+}
+.cloze select.ok, .match-select.ok{ border-color:var(--success); background:var(--success-bg); color:var(--success); }
+.cloze select.bad, .match-select.bad{ border-color:var(--error); background:var(--error-bg); color:var(--error); }
+.match-row{ display:flex; align-items:center; gap:14px; padding:12px 0; border-bottom:1px solid var(--border-soft); flex-wrap:wrap; }
+.match-left{ flex:1; min-width:200px; font-weight:600; font-size:15px; }
+.match-left .lc-sub{ display:block; font-weight:400; font-size:13px; color:var(--ink-mute); }
+
+/* ---------- Puzzle: multi-select grid ---------- */
+.multi-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:11px; margin:20px 0; }
+@media(max-width:600px){ .multi-grid{ grid-template-columns:1fr; } }
+.multi-card{
+  display:flex; align-items:flex-start; gap:11px; padding:15px 16px; background:var(--surface);
+  border:1.5px solid var(--border); border-radius:10px; cursor:pointer; font-size:14px; line-height:1.45;
+  text-align:left; transition:all .18s ease; font-family:var(--font-body); color:var(--ink);
+}
+.multi-card:hover{ border-color:var(--link-blue); }
+.multi-card .box{ width:18px; height:18px; border-radius:5px; border:2px solid var(--border); flex-shrink:0; margin-top:1px; }
+.multi-card.selected{ border-color:var(--link-blue); background:var(--blue-soft); }
+.multi-card.selected .box{ border-color:var(--link-blue); background:var(--link-blue); }
+.multi-card.correct{ border-color:var(--success); background:var(--success-bg); }
+.multi-card.incorrect{ border-color:var(--error); background:var(--error-bg); }
+.multi-card.missed{ border-color:var(--missed); background:var(--missed-bg); }
+
+/* ---------- Puzzle: classify rows ---------- */
+.classify-row{ display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid var(--border-soft); flex-wrap:wrap; }
+.classify-text{ flex:1; min-width:210px; font-size:14.5px; }
+.classify-text .url{ font-family:var(--font-mono); font-size:14px; font-weight:600; letter-spacing:0.01em; }
+.classify-btns{ display:flex; gap:8px; flex-wrap:wrap; }
+.classify-btn{
+  font-family:var(--font-body); font-size:12.5px; font-weight:600; padding:8px 14px; border-radius:8px;
+  border:1.5px solid var(--border); background:var(--surface); color:var(--ink-soft); cursor:pointer; transition:all .18s ease;
+}
+.classify-btn:hover{ border-color:var(--link-blue); }
+.classify-btn.active{ border-color:var(--ig-magenta); background:var(--ig-magenta); color:#fff; }
+.classify-row.correct{ background:var(--success-bg); }
+.classify-row.incorrect{ background:var(--error-bg); }
+
+/* ---------- Status / hint ---------- */
+.status{ padding:14px 18px; border-radius:10px; margin:18px 0; font-size:14px; display:none; }
+.status.show{ display:block; animation:screenIn .3s ease both; }
+.status .label{ display:block; font-family:var(--font-mono); font-size:10px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; margin-bottom:4px; }
+.status-success{ background:var(--success-bg); border-left:3px solid var(--success); }
+.status-success .label{ color:var(--success); }
+.status-warning{ background:var(--error-bg); border-left:3px solid var(--error); }
+.status-warning .label{ color:var(--error); }
+.hint-box{ display:none; background:var(--surface-alt); border:1px dashed var(--border); border-radius:10px; padding:14px 18px; margin-top:16px; font-size:14px; color:var(--ink-soft); }
+.hint-box.show{ display:block; }
+.hint-box .label{ display:block; font-family:var(--font-mono); font-size:10px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:var(--ig-orange); margin-bottom:5px; }
+.hint-btn{ background:none; border:none; color:var(--link-blue); font-family:var(--font-body); font-size:13px; font-weight:600; cursor:pointer; text-decoration:underline; }
+
+/* ---------- Video-Einbettung (Briefing) ---------- */
+.video-wrap{ position:relative; width:100%; max-width:760px; aspect-ratio:16/9; margin:6px auto 14px; border-radius:14px; overflow:hidden; border:1px solid var(--border); box-shadow:var(--shadow-sm); background:#000; }
+.video-wrap iframe{ position:absolute; inset:0; width:100%; height:100%; border:0; }
+
+/* ---------- Gestufte Hilfe für Lückentexte ---------- */
+.cloze-help{ display:none; background:var(--accent-soft); border:1px dashed var(--ig-orange); border-radius:10px; padding:12px 16px; margin-top:12px; font-size:14px; }
+.cloze-help.show{ display:block; animation:screenIn .3s ease both; }
+.cloze-help .label{ display:block; font-family:var(--font-mono); font-size:10px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:var(--ig-orange); margin-bottom:6px; }
+.cloze-help ul{ margin:0 0 0 18px; }
+.cloze-help li{ margin:4px 0; }
+
+/* ---------- Reveal overlay ---------- */
+.reveal-overlay{ position:fixed; inset:0; z-index:200; background:rgba(150,47,191,0.5); backdrop-filter:blur(4px); display:none; align-items:center; justify-content:center; padding:20px; }
+.reveal-overlay.show{ display:flex; animation:screenIn .3s ease both; }
+.reveal-card{ background:var(--surface); border-radius:18px; box-shadow:var(--shadow-md); padding:40px 44px; max-width:460px; text-align:center; }
+.reveal-letter{
+  font-family:var(--font-display); font-size:96px; font-weight:800; line-height:1;
+  background:var(--ig-grad); -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+.reveal-caption{ font-family:var(--font-mono); font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:var(--ink-mute); margin-top:6px; }
+.reveal-progress{ display:flex; gap:8px; justify-content:center; margin:22px 0 26px; }
+.reveal-progress-letter{ width:40px; height:48px; display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-size:22px; font-weight:700; color:var(--ink-mute); background:var(--surface-alt); border:1px solid var(--border); border-radius:9px; }
+.reveal-progress-letter.lit{ color:#fff; background:var(--ig-grad); border-color:transparent; }
+
+/* ---------- Final ---------- */
+.final-hero{ text-align:center; margin-bottom:34px; }
+.final-code{
+  font-family:var(--font-display); font-size:clamp(58px,13vw,110px); font-weight:800; letter-spacing:0.1em; line-height:1;
+  background:var(--ig-grad); -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+.final-actions{ display:grid; gap:14px; }
+.final-action{ display:block; width:100%; text-align:left; background:var(--surface-alt); border:1.5px solid var(--border); border-radius:14px; padding:18px 20px; cursor:pointer; transition:all .2s ease; font-family:var(--font-body); }
+.final-action:hover{ border-color:var(--ig-magenta); box-shadow:var(--shadow-sm); }
+.final-action .label{ font-family:var(--font-mono); font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:var(--ig-orange); font-weight:600; }
+.final-action .title{ font-family:var(--font-display); font-size:18px; font-weight:700; color:var(--ink); margin:3px 0 4px; }
+.final-action .desc{ font-size:13.5px; color:var(--ink-soft); }
+.font-mono{ font-family:var(--font-mono); }
+.muted-list{ margin:6px 0 0 18px; }
+.muted-list li{ margin-bottom:6px; color:var(--ink-soft); font-size:14px; }
+
+/* Spurenkette-SVG (Final) */
+.journey-wrap{ text-align:center; margin:10px 0 4px; }
+.journey-wrap svg{ max-width:540px; width:100%; height:auto; }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="topbar">
+    <div class="topbar-brand">
+      <svg viewBox="0 0 24 24" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1" fill="currentColor" stroke="none"/></svg>
+      Schülerzeitung · Fall @lichtenberg.leaks
+    </div>
+    <div class="topbar-progress" id="progressSeals"></div>
+  </div>
+
+  <div class="main">
+    <div class="screen" id="screenContainer"></div>
+  </div>
+
+  <div class="site-footer">Copyright Jan-Rickmer Feindt</div>
+</div>
+
+<!-- Reveal overlay -->
+<div class="reveal-overlay" id="revealOverlay">
+  <div class="reveal-card">
+    <div class="reveal-letter" id="revealLetter">C</div>
+    <div class="reveal-caption" id="revealCaption"></div>
+    <div class="reveal-progress" id="revealProgress"></div>
+    <button class="btn btn-primary btn-arrow" id="revealContinue">Weiter</button>
+  </div>
+</div>
+
+<!-- ==== Eingebetteter Feiditor (Digitales Arbeitsblatt) ==== -->
+<script type="text/template" id="feiditor-src">
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Feiditor</title>
+<style>
+  :root{
+    --paper:#f7f4ec; --paper2:#fffdf8; --ink:#221f1a; --muted:#6f675a;
+    --line:#ddd5c4; --accent:#6b4f2c; --accent2:#8a6a3c; --shadow:rgba(40,30,15,.10);
+    --serif:"Iowan Old Style","Palatino Linotype","Book Antiqua",Palatino,Georgia,serif;
+    --sans:"Avenir Next",Avenir,"Segoe UI","Helvetica Neue",system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; background:var(--paper); color:var(--ink); font-family:var(--sans);
+    -webkit-font-smoothing:antialiased; line-height:1.5;
+  }
+  .screen{display:none; min-height:100vh}
+  .screen.active{display:block}
+
+  /* ---------- Start ---------- */
+  #screen-start{display:none; place-items:center; padding:40px 20px}
+  #screen-start.active{display:grid}
+  .card{
+    width:100%; max-width:440px; background:var(--paper2);
+    border:1px solid var(--line); border-radius:14px; padding:40px 36px;
+    box-shadow:0 18px 50px -28px var(--shadow);
+  }
+  .brand{font-family:var(--serif); font-size:13px; letter-spacing:.22em; text-transform:uppercase; color:var(--accent); margin:0 0 6px}
+  .card h1{font-family:var(--serif); font-weight:600; font-size:30px; margin:0 0 4px; letter-spacing:.01em}
+  .card p.sub{color:var(--muted); margin:0 0 26px; font-size:14.5px}
+  label{display:block; font-size:12.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); margin:0 0 6px}
+  .field{margin-bottom:18px}
+  input[type=text]{
+    width:100%; font-family:var(--serif); font-size:18px; color:var(--ink);
+    background:var(--paper); border:1px solid var(--line); border-radius:9px;
+    padding:11px 13px; outline:none; transition:border-color .15s, box-shadow .15s;
+  }
+  input[type=text]:focus{border-color:var(--accent2); box-shadow:0 0 0 3px rgba(138,106,60,.16)}
+  .btn{
+    font-family:var(--sans); font-size:15px; font-weight:600; letter-spacing:.01em;
+    color:var(--paper2); background:var(--ink); border:1px solid var(--ink);
+    border-radius:9px; padding:12px 18px; cursor:pointer; transition:transform .06s, background .15s;
+  }
+  .btn:hover{background:#332e25}
+  .btn:active{transform:translateY(1px)}
+  .btn.block{width:100%; margin-top:6px}
+  .btn.ghost{background:transparent; color:var(--ink); border-color:var(--line)}
+  .btn.ghost:hover{background:var(--paper)}
+  .err{color:#b3261e; font-size:13.5px; min-height:18px; margin:2px 0 0}
+  .foot{margin-top:24px; padding-top:16px; border-top:1px solid var(--line); text-align:center}
+  .foot a{color:var(--muted); font-size:12.5px; text-decoration:none; letter-spacing:.04em}
+  .foot a:hover{color:var(--accent); text-decoration:underline}
+
+  /* ---------- Editor ---------- */
+  #screen-editor{display:none; flex-direction:column; height:100vh}
+  #screen-editor.active{display:flex}
+  .topbar{
+    display:flex; align-items:center; justify-content:space-between; gap:16px;
+    padding:13px 22px; border-bottom:1px solid var(--line); background:var(--paper2);
+  }
+  .who{font-family:var(--serif); font-size:16px}
+  .who .lbl{font-family:var(--sans); font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); margin-right:8px}
+  .count{font-size:12.5px; color:var(--muted); font-variant-numeric:tabular-nums}
+  .paperwrap{flex:1; overflow:auto; display:flex; flex-direction:column; align-items:center; padding:34px 20px 150px}
+  .sheet{
+    width:100%; max-width:760px; background:var(--paper2); border:1px solid var(--line);
+    border-radius:6px; box-shadow:0 24px 60px -40px var(--shadow); padding:56px 60px;
+  }
+  #editor{
+    width:100%; min-height:60vh; resize:none; border:0; outline:0;
+    font-family:var(--serif); font-size:18px; line-height:32px; color:var(--ink);
+    background-color:transparent;
+    background-image:repeating-linear-gradient(to bottom,
+      transparent 0,
+      transparent 31px,
+      var(--line) 31px,
+      var(--line) 32px);
+    background-attachment:local;
+    padding:0;
+  }
+  #editor::placeholder{color:#b9b0a0}
+  .moodle-hint{
+    max-width:760px; margin:14px auto 0; padding:14px 20px;
+    background:#fdecea; border:1.5px solid #f5b8b1; border-radius:8px;
+    color:#a72020; font-family:var(--sans); font-size:14.5px; font-weight:600;
+    text-align:center; line-height:1.5;
+  }
+  .actionbar{
+    position:fixed; left:0; right:0; bottom:0; display:flex; justify-content:center;
+    padding:16px 16px 46px; background:linear-gradient(to top, var(--paper) 60%, rgba(247,244,236,0));
+  }
+  .copyright{
+    position:fixed; left:0; right:0; bottom:13px; text-align:center;
+    font-size:11px; letter-spacing:.05em; color:var(--muted); pointer-events:none; z-index:6;
+  }
+
+  /* ---------- Lehrkraft ---------- */
+  #screen-teacher{display:none; place-items:start center; padding:40px 20px 80px}
+  #screen-teacher.active{display:grid}
+  .panel{width:100%; max-width:920px}
+  .panel h1{font-family:var(--serif); font-weight:600; font-size:26px; margin:0 0 4px}
+  .panel .sub{color:var(--muted); margin:0 0 22px; font-size:14.5px}
+  .drop{
+    background:var(--paper2); border:1.5px dashed var(--line); border-radius:12px;
+    padding:26px; text-align:center; color:var(--muted); font-size:14.5px;
+  }
+  .drop strong{color:var(--ink)}
+  .row{display:flex; gap:12px; flex-wrap:wrap; align-items:center; margin-top:14px}
+  input[type=password]{
+    font-family:var(--serif); font-size:18px; letter-spacing:.12em; width:180px;
+    background:var(--paper); border:1px solid var(--line); border-radius:9px; padding:10px 12px; outline:none;
+  }
+  input[type=password]:focus{border-color:var(--accent2); box-shadow:0 0 0 3px rgba(138,106,60,.16)}
+  .hidden{display:none !important}
+  .backlink{display:inline-block; margin-bottom:18px; color:var(--muted); font-size:13px; text-decoration:none}
+  .backlink:hover{color:var(--accent)}
+
+  /* analysis */
+  .legend{display:flex; gap:18px; flex-wrap:wrap; margin:20px 0 14px; font-size:13.5px; color:var(--muted)}
+  .legend span{display:inline-flex; align-items:center; gap:7px}
+  .sw{width:13px; height:13px; border-radius:3px; display:inline-block}
+  .stat{font-size:13px; color:var(--muted); margin:0 0 16px; font-variant-numeric:tabular-nums}
+  .analysis{
+    background:var(--paper2); border:1px solid var(--line); border-radius:10px;
+    padding:30px 34px; font-family:var(--serif); font-size:17.5px; line-height:1.85;
+    white-space:pre-wrap; word-wrap:break-word; overflow-wrap:anywhere;
+  }
+  .nmeta{font-family:var(--sans); font-size:12.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); margin-bottom:14px}
+</style>
+</head>
+<body>
+
+<!-- ============ START ============ -->
+<section id="screen-start" class="screen active">
+  <div class="card">
+    <p class="brand">Feiditor</p>
+    <h1>Bevor du beginnst</h1>
+    <p class="sub">Bitte trage deinen Namen ein. Danach öffnet sich der Schreibbereich.</p>
+    <div class="field">
+      <label for="vorname">Vorname</label>
+      <input type="text" id="vorname" autocomplete="off" spellcheck="false">
+    </div>
+    <div class="field">
+      <label for="nachname">Nachname</label>
+      <input type="text" id="nachname" autocomplete="off" spellcheck="false">
+    </div>
+    <p class="err" id="start-err"></p>
+    <button class="btn block" id="start-btn">Schreibbereich öffnen</button>
+    <div class="foot"><a href="#" id="to-teacher">Lehrkraft</a></div>
+  </div>
+</section>
+
+<!-- ============ EDITOR ============ -->
+<section id="screen-editor" class="screen">
+  <div class="topbar">
+    <div class="who"><span class="lbl">Verfasser:in</span><span id="who-name"></span></div>
+    <div class="count"><span id="charcount">0</span> Zeichen</div>
+  </div>
+  <div class="paperwrap">
+    <div class="sheet">
+      <textarea id="editor" placeholder="Hier schreiben…" spellcheck="true" autocomplete="off"></textarea>
+    </div>
+    <div class="moodle-hint">Wandle diesen Text nun in eine PDF-Datei um und lade diese PDF-Datei in der korrekten Abgabe auf Moodle hoch.</div>
+    <div class="moodle-hint">Aufgabe 7: Nachdem du die Lösungen zu Aufgaben 1-6 auf Moodle hochgeladen hast, bearbeitest du die auf Moodle verlinkte Aufgabe "Text verfassen ..."</div>
+  </div>
+  <div class="actionbar">
+    <button class="btn" id="export-btn">Text in PDF-Datei umwandeln</button>
+  </div>
+</section>
+
+<!-- ============ LEHRKRAFT ============ -->
+<section id="screen-teacher" class="screen">
+  <div class="panel">
+    <a href="#" class="backlink" id="back-start">← zurück</a>
+    <h1>Auswertung für die Lehrkraft</h1>
+    <p class="sub">Laden Sie die vom Schüler abgegebene PDF-Datei und geben Sie den Code ein.
+       Der Code ist die Anzahl der Buchstaben im Vornamen des Schülers multipliziert mit 1104
+       (Beispiel: Vorname „Lina" = 4 Buchstaben → Code 4416). Danach wird der Text farblich
+       ausgewertet, und die Escape-Room-Daten (Name, Geburtsdatum, Bestätigungscode) werden angezeigt.</p>
+
+    <div class="drop">
+      <p style="margin:0 0 10px"><strong>PDF auswählen</strong> oder hierher ziehen</p>
+      <input type="file" id="pdf-input" accept="application/pdf,.pdf">
+    </div>
+    <p class="err" id="teacher-err"></p>
+
+    <div id="code-area" class="hidden">
+      <div class="row">
+        <input type="password" id="code-input" inputmode="numeric" placeholder="Code">
+        <button class="btn" id="code-btn">Auswertung anzeigen</button>
+      </div>
+    </div>
+
+    <div id="result"></div>
+  </div>
+</section>
+
+<div id="pagefoot" class="copyright">Copyright Jan-Rickmer Feindt</div>
+
+<script>
+/* ====================================================================== *
+ *  Selbst gebauter, vollständig offline laufender Editor mit Tracking.   *
+ *  Keine externen Bibliotheken, keine Netzwerkaufrufe.                   *
+ * ====================================================================== */
+
+/* ---------- Helvetica-Glyphbreiten (AFM, Einheiten/1000), nach Byte ---------- */
+const HELV={32:278,33:278,34:355,35:556,36:556,37:889,38:667,39:191,40:333,41:333,42:389,43:584,44:278,45:333,46:278,47:278,48:556,49:556,50:556,51:556,52:556,53:556,54:556,55:556,56:556,57:556,58:278,59:278,60:584,61:584,62:584,63:556,64:1015,65:667,66:667,67:722,68:722,69:667,70:611,71:778,72:722,73:278,74:500,75:667,76:556,77:833,78:722,79:778,80:667,81:778,82:722,83:667,84:611,85:722,86:667,87:944,88:667,89:667,90:611,91:278,92:278,93:278,94:469,95:556,96:333,97:556,98:556,99:500,100:556,101:556,102:278,103:556,104:556,105:222,106:222,107:500,108:222,109:833,110:556,111:556,112:556,113:556,114:333,115:500,116:278,117:556,118:500,119:722,120:500,121:500,122:500,123:334,124:260,125:334,126:584,133:1000,145:222,146:222,147:333,148:333,149:350,150:556,151:1000,160:278,161:333,162:556,163:556,164:556,165:556,166:260,167:556,168:333,169:737,170:370,171:556,172:584,173:333,174:737,175:333,176:400,177:584,178:333,179:333,180:333,181:556,182:537,183:278,184:333,185:333,186:365,187:556,188:834,189:834,190:834,191:611,192:667,193:667,194:667,195:667,196:667,197:667,198:1000,199:722,200:667,201:667,202:667,203:667,204:278,205:278,206:278,207:278,208:722,209:722,210:778,211:778,212:778,213:778,214:778,215:584,216:778,217:722,218:722,219:722,220:722,221:667,222:667,223:611,224:556,225:556,226:556,227:556,228:556,229:556,230:889,231:500,232:556,233:556,234:556,235:556,236:278,237:278,238:278,239:278,240:556,241:556,242:556,243:556,244:556,245:556,246:556,247:584,248:611,249:556,250:556,251:556,252:556,253:500,254:556,255:500};
+function afm(b){return HELV[b]!==undefined?HELV[b]:556;}
+const CP1252={0x20AC:128,0x201A:130,0x0192:131,0x201E:132,0x2026:133,0x2020:134,0x2021:135,0x02C6:136,0x2030:137,0x0160:138,0x2039:139,0x0152:140,0x017D:142,0x2018:145,0x2019:146,0x201C:147,0x201D:148,0x2022:149,0x2013:150,0x2014:151,0x02DC:152,0x2122:153,0x0161:154,0x203A:155,0x0153:156,0x017E:158,0x0178:159};
+function charByte(ch){const cp=ch.codePointAt(0);if(cp<=0xFF)return cp;if(CP1252[cp]!==undefined)return CP1252[cp];return 0x3F;}
+function charWidth(ch,s){return afm(charByte(ch))/1000*s;}
+function textWidth(str,s){let w=0;for(const ch of str)w+=charWidth(ch,s);return w;}
+function encStr(str){let o="";for(const ch of str){const b=charByte(ch);if(b===0x28)o+="\\(";else if(b===0x29)o+="\\)";else if(b===0x5C)o+="\\\\";else o+=String.fromCharCode(b);}return o;}
+
+function wrapText(text,maxW,size){
+  const lines=[]; const paras=text.replace(/\r\n?/g,"\n").split("\n");
+  for(const para of paras){
+    if(para===""){lines.push("");continue;}
+    const words=para.split(/( )/); let cur="";
+    const pushWord=(w)=>{
+      if(textWidth(w,size)>maxW){
+        let chunk="";
+        for(const ch of w){
+          if(textWidth(chunk+ch,size)>maxW&&chunk!==""){
+            if(cur!==""){lines.push(cur);cur="";} lines.push(chunk); chunk=ch;
+          } else chunk+=ch;
+        }
+        if(chunk){if(cur!==""){lines.push(cur);cur="";} cur=chunk;} return;
+      }
+      if(textWidth(cur+w,size)>maxW&&cur!==""){lines.push(cur.replace(/ +$/,""));cur=w.trim()===""?"":w;}
+      else cur+=w;
+    };
+    for(const w of words) pushWord(w);
+    lines.push(cur.replace(/ +$/,""));
+  }
+  return lines;
+}
+
+function buildPdf(opts){
+  const PW=595.28,PH=841.89, ML=56,MR=56,MT=56,MB=64;
+  const HEAD_SIZE=13,BODY_SIZE=11,NOTE_SIZE=11,LEAD=15.5;
+  const usableW=PW-ML-MR;
+  const headerBaseline=PH-MT-HEAD_SIZE, ruleY=headerBaseline-6, bodyTop=ruleY-22, bodyBottom=MB+24;
+  const allLines=wrapText(opts.body||"",usableW,BODY_SIZE);
+  if(allLines.length===0) allLines.push("");
+  const pages=[]; let idx=0;
+  while(idx<allLines.length){
+    const pageLines=[]; let y=bodyTop;
+    while(idx<allLines.length&&y>=bodyBottom){pageLines.push({text:allLines[idx],y});y-=LEAD;idx++;}
+    pages.push({lines:pageLines});
+  }
+  const nPages=pages.length;
+
+  // roter Moodle-Hinweis unten auf der letzten Seite
+  const noteText="Bitte diese PDF-Datei herunterladen und bei Moodle hochladen.";
+  const noteLines=wrapText(noteText,usableW,NOTE_SIZE);
+  const noteBottom=46; // Grundlinie der untersten Hinweiszeile
+
+  const pageObjNum=(i)=>4+i*2, contObjNum=(i)=>5+i*2;
+  const objects={};
+  objects[1]="<< /Type /Catalog /Pages 2 0 R >>";
+  objects[2]=`<< /Type /Pages /Count ${nPages} /Kids [${pages.map((_,i)=>`${pageObjNum(i)} 0 R`).join(" ")}] >>`;
+  objects[3]="<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>";
+  for(let i=0;i<nPages;i++){
+    objects[pageObjNum(i)]=`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${PW.toFixed(2)} ${PH.toFixed(2)}] /Resources << /Font << /F1 3 0 R >> >> /Contents ${contObjNum(i)} 0 R >>`;
+    let s="0.5 w\n";
+    s+=`BT /F1 ${HEAD_SIZE} Tf 0 0 0 rg ${ML} ${headerBaseline.toFixed(2)} Td (${encStr(opts.name||"")}) Tj ET\n`;
+    s+=`${ML} ${ruleY.toFixed(2)} m ${(PW-MR).toFixed(2)} ${ruleY.toFixed(2)} l S\n`;
+    const pl=pages[i].lines;
+    if(pl.length){
+      s+=`BT /F1 ${BODY_SIZE} Tf 0 0 0 rg ${ML} ${pl[0].y.toFixed(2)} Td ${LEAD} TL\n`;
+      for(let j=0;j<pl.length;j++){if(j>0)s+="T*\n"; s+=`(${encStr(pl[j].text)}) Tj\n`;}
+      s+="ET\n";
+    }
+    if(i===nPages-1){ // roter Hinweis nur auf der letzten Seite
+      const topY=noteBottom+(noteLines.length-1)*LEAD;
+      s+=`BT /F1 ${NOTE_SIZE} Tf 0.78 0.05 0.05 rg ${ML} ${topY.toFixed(2)} Td ${LEAD} TL\n`;
+      for(let j=0;j<noteLines.length;j++){if(j>0)s+="T*\n"; s+=`(${encStr(noteLines[j])}) Tj\n`;}
+      s+="ET\n";
+    }
+    objects[contObjNum(i)]={stream:s};
+  }
+  let pdf="%PDF-1.7\n%\u00E2\u00E3\u00CF\u00D3\n";
+  if(opts.trackB64) pdf+=`%TRACKDATA ${opts.trackB64}\n`;
+  const offsets={}; const maxNum=3+nPages*2;
+  for(let n=1;n<=maxNum;n++){
+    offsets[n]=pdf.length; const o=objects[n];
+    if(o&&o.stream!==undefined){const st=o.stream;pdf+=`${n} 0 obj\n<< /Length ${st.length} >>\nstream\n${st}endstream\nendobj\n`;}
+    else pdf+=`${n} 0 obj\n${o}\nendobj\n`;
+  }
+  const xrefStart=pdf.length;
+  pdf+=`xref\n0 ${maxNum+1}\n0000000000 65535 f \n`;
+  for(let n=1;n<=maxNum;n++) pdf+=String(offsets[n]).padStart(10,"0")+" 00000 n \n";
+  pdf+=`trailer\n<< /Size ${maxNum+1} /Root 1 0 R >>\nstartxref\n${xrefStart}\n%%EOF`;
+  return pdf;
+}
+
+/* ---------------- gemeinsame Krypto- & Auswertungs-Funktionen ---------------- *
+ * Diese werden per toString() in die Lehrkraft-Seite (data:-Link) eingebettet,  *
+ * damit es nur EINE Quelle der Wahrheit gibt.                                   */
+function bytesToB64(bytes){let bin="";const CH=0x8000;for(let i=0;i<bytes.length;i+=CH)bin+=String.fromCharCode.apply(null,bytes.subarray(i,i+CH));return btoa(bin);}
+function b64ToBytes(b64){const bin=atob(b64);const out=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)out[i]=bin.charCodeAt(i);return out;}
+async function _key(codeStr,usage){const mat=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(codeStr));return crypto.subtle.importKey("raw",mat,{name:"AES-GCM"},false,usage);}
+async function aesEncrypt(plain,codeStr){const iv=crypto.getRandomValues(new Uint8Array(12));const key=await _key(codeStr,["encrypt"]);const ct=await crypto.subtle.encrypt({name:"AES-GCM",iv},key,new TextEncoder().encode(plain));return bytesToB64(iv)+":"+bytesToB64(new Uint8Array(ct));}
+async function aesDecrypt(bundle,codeStr){const parts=bundle.split(":");const iv=b64ToBytes(parts[0]);const ct=b64ToBytes(parts[1]);const key=await _key(codeStr,["decrypt"]);const pt=await crypto.subtle.decrypt({name:"AES-GCM",iv},key,ct);return new TextDecoder().decode(pt);}
+function esc(s){return s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]));}
+function classify(isVisible,src,gap){
+  const COL={plain:"#23201b",paste:"#b3261e",fast:"#c2710c",slow:"#1f7a34",system:"#9c948a"};
+  if(!isVisible) return COL.plain;
+  if(src==="s") return COL.system;           // System-Text (vorbefüllte Aufgaben) -> gedämpftes Grau
+  if(src==="p") return COL.paste;            // aus Zwischenablage -> rot
+  if(gap>=0&&gap<=15) return COL.paste;      // <= 0,015 s getippt -> rot
+  if(gap>15&&gap<=70) return COL.fast;       // 0,015-0,07 s -> orange
+  return COL.slow;                           // > 0,07 s / erstes Zeichen -> grün
+}
+function renderAnalysis(payload){
+  const t=payload.t, m=payload.m||[];
+  let html=""; let total=0,red=0,orange=0,green=0,sysCount=0;
+  const WS=/\s/;
+  for(let i=0;i<t.length;i++){
+    const ch=t[i]; const isV=!WS.test(ch);
+    const mark=m[i]||["t",-1]; const src=mark[0]; const gap=mark[1];
+    const col=classify(isV,src,gap);
+    if(isV){
+      if(src==="s"){ sysCount++; }
+      else{
+        total++;
+        if(col==="#b3261e") red++;
+        else if(col==="#c2710c") orange++;
+        else green++;
+      }
+    }
+    html+=`<span style="color:${col}">${esc(ch)}</span>`;
+  }
+  const pct=(x)=>total?Math.round(x/total*100):0;
+  const legend=
+    '<div class="legend">'+
+      '<span><i class="sw" style="background:#9c948a"></i>vorbefüllte Aufgabenstellung (kein Schülertext)</span>'+
+      '<span><i class="sw" style="background:#b3261e"></i>eingefügt oder ≤ 0,015 s getippt</span>'+
+      '<span><i class="sw" style="background:#c2710c"></i>0,015–0,07 s nach vorherigem Zeichen getippt</span>'+
+      '<span><i class="sw" style="background:#1f7a34"></i>&gt; 0,07 s nach vorherigem Zeichen getippt</span>'+
+    '</div>';
+  const stat=`<p class="stat">Schülertext (ohne vorbefüllte Aufgaben): ${total} Zeichen · rot: ${red} (${pct(red)} %) · orange: ${orange} (${pct(orange)} %) · grün: ${green} (${pct(green)} %) · vorbefüllt: ${sysCount} Zeichen</p>`;
+  let escapeBlock="";
+  if(payload.e){
+    escapeBlock=
+      '<div style="background:#fffdf8;border:1px solid #ddd5c4;border-radius:10px;padding:18px 22px;margin:0 0 18px;font-family:Iowan Old Style,Palatino,Georgia,serif;font-size:15.5px;line-height:1.55">'+
+        '<div style="font-family:Avenir Next,system-ui,sans-serif;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#6f675a;margin-bottom:10px">Escape-Room-Daten</div>'+
+        '<div><strong>Name:</strong> '+esc(payload.e.fn||"")+' '+esc(payload.e.ln||"")+'</div>'+
+        '<div><strong>Geburtsdatum:</strong> '+esc(payload.e.bd||"")+'</div>'+
+        '<div><strong>Bestätigungscode:</strong> '+esc(payload.e.cd||"")+'</div>'+
+      '</div>';
+  }
+  const head=`<div class="nmeta">Verfasser:in — ${esc(payload.n||"")}</div>`;
+  return head+escapeBlock+legend+stat+`<div class="analysis">${html}</div>`;
+}
+
+/* ---------------- gemeinsame Krypto-Funktionen werden nur noch lokal genutzt ---------------- */
+
+/* ----------------------- geheime Code-Bildung (Lehrkraft) ----------------------- */
+function _kf(s){const n=(s.match(/\p{L}/gu)||[]).length;return String(n*(0x230+0x220));}
+
+/* ------------------------------ Tracking ------------------------------ */
+let prevValue="";
+let recs=[];          // pro Zeichen: {src:'t'|'p', t:ms}
+let justPasted=false; // wird durch paste/drop gesetzt, nach einem input-Event geleert
+
+function reconcile(newVal,pasted,now){
+  const a=prevValue,b=newVal; const minL=Math.min(a.length,b.length);
+  let p=0; while(p<minL&&a[p]===b[p])p++;
+  let s=0; while(s<minL-p&&a[a.length-1-s]===b[b.length-1-s])s++;
+  const removed=a.length-p-s;
+  const inserted=b.slice(p,b.length-s);
+  const ins=inserted.split("").map(()=>({src:pasted?"p":"t",t:now}));
+  recs.splice(p,removed,...ins);
+  if(recs.length!==b.length){ // Sicherheitsnetz gegen Desync
+    recs=b.split("").map(()=>({src:"t",t:now}));
+  }
+  prevValue=newVal;
+}
+
+function buildPayload(name,text){
+  if(recs.length!==text.length){ // letzte Absicherung
+    const now=Date.now(); recs=text.split("").map(()=>({src:"t",t:now}));
+  }
+  const m=[];
+  for(let i=0;i<text.length;i++){
+    const gap=(i===0)?-1:(recs[i].t-recs[i-1].t);
+    m.push([recs[i].src,gap]);
+  }
+  return {n:name,t:text,m};
+}
+
+/* ------------------------------ UI-Steuerung ------------------------------ */
+const $=(id)=>document.getElementById(id);
+function show(screen){
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+  $(screen).classList.add("active");
+  const pf=$("pagefoot"); if(pf) pf.style.display=(screen==="screen-teacher")?"none":"block";
+}
+function sanitize(s){return (s||"").replace(/[^\p{L}\p{N}_-]/gu,"_").slice(0,40)||"Datei";}
+function asciiName(s){
+  return (s||"")
+    .replace(/ä/g,"ae").replace(/ö/g,"oe").replace(/ü/g,"ue")
+    .replace(/Ä/g,"Ae").replace(/Ö/g,"Oe").replace(/Ü/g,"Ue").replace(/ß/g,"ss")
+    .normalize("NFKD").replace(/[\u0300-\u036f]/g,"")
+    .replace(/[^A-Za-z0-9_-]/g,"_").replace(/_+/g,"_").replace(/^_|_$/g,"")
+    .slice(0,40) || "Datei";
+}
+function fileSafe(s){return (s||"").replace(/[\/\\:*?"<>|\u0000-\u001f]/g,"").replace(/\s+/g," ").trim().slice(0,90)||"Datei";}
+function downloadBlob(blob,filename){
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob); a.download=filename;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),5000);
+}
+
+let studentVorname="", studentNachname="";
+
+/* Start */
+$("start-btn").addEventListener("click",()=>{
+  const v=$("vorname").value.trim(), n=$("nachname").value.trim();
+  if(!v||!n){$("start-err").textContent="Bitte Vor- und Nachnamen eintragen.";return;}
+  studentVorname=v; studentNachname=n;
+  $("who-name").textContent=v+" "+n;
+  prevValue=""; recs=[]; $("editor").value="";
+  $("charcount").textContent="0";
+  show("screen-editor");
+  setTimeout(()=>$("editor").focus(),40);
+});
+$("vorname").addEventListener("keydown",e=>{if(e.key==="Enter")$("nachname").focus();});
+$("nachname").addEventListener("keydown",e=>{if(e.key==="Enter")$("start-btn").click();});
+$("to-teacher").addEventListener("click",e=>{e.preventDefault();show("screen-teacher");});
+$("back-start").addEventListener("click",e=>{e.preventDefault();show("screen-start");});
+
+/* Editor-Tracking */
+const ed=$("editor");
+function updateCharcount(){
+  let n=0; for(const r of recs){ if(r.src!=="s") n++; }
+  $("charcount").textContent=String(n);
+}
+ed.addEventListener("paste",()=>{justPasted=true;});
+ed.addEventListener("drop",()=>{justPasted=true;});
+ed.addEventListener("input",()=>{
+  reconcile(ed.value,justPasted,Date.now());
+  justPasted=false;
+  updateCharcount();
+});
+
+/* Export: erzeugt NUR die Text-PDF (mit rotem Moodle-Hinweis); die Zeiterfassungs- und
+   Escape-Room-Daten stecken verschlüsselt (als %TRACKDATA) im PDF und sind nur mit dem
+   Feiditor-Code (Anzahl Buchstaben im Vornamen × 1104) durch die Lehrkraft auslesbar. */
+$("export-btn").addEventListener("click",async()=>{
+  const btn=$("export-btn"); const text=ed.value;
+  const name=studentVorname+" "+studentNachname;
+  btn.disabled=true; const old=btn.textContent; btn.textContent="Erzeuge PDF…";
+  try{
+    const payload=buildPayload(name,text);
+    // Escape-Room-Daten zusätzlich (versteckt) ins PDF einbetten
+    if(window.__ESCAPE_DATA__){
+      payload.e={
+        fn:window.__ESCAPE_DATA__.firstName||"",
+        ln:window.__ESCAPE_DATA__.lastName||"",
+        bd:window.__ESCAPE_DATA__.birthDate||"",
+        cd:window.__ESCAPE_DATA__.code||""
+      };
+    }
+    const code=_kf(studentVorname);              // Feiditor-Code: NICHT der Escape-Room-Code
+    const bundle=await aesEncrypt(JSON.stringify(payload),code);
+
+    const pdfName=fileSafe("Text von "+studentVorname)+".pdf";
+
+    // PDF: Text + roter Moodle-Hinweis; Tracking- und Escape-Daten verschlüsselt als %TRACKDATA-Reserve
+    const pdfStr=buildPdf({name,body:text,trackB64:bundle});
+    const u8=new Uint8Array(pdfStr.length);
+    for(let i=0;i<pdfStr.length;i++)u8[i]=pdfStr.charCodeAt(i)&0xFF;
+
+    downloadBlob(new Blob([u8],{type:"application/pdf"}), pdfName);
+
+    btn.textContent="PDF erstellt ✓";
+    setTimeout(()=>{ btn.textContent=old; }, 2200);
+  }catch(err){ alert("Fehler beim Erzeugen der PDF: "+err.message); btn.textContent=old; }
+  finally{ btn.disabled=false; }
+});
+
+/* Lehrkraft: PDF laden + Code */
+let teacherBundle=null;
+function readPdfFile(file){
+  $("teacher-err").textContent=""; $("result").innerHTML="";
+  $("code-area").classList.add("hidden"); teacherBundle=null;
+  const fr=new FileReader();
+  fr.onload=()=>{
+    const bytes=new Uint8Array(fr.result);
+    let str=""; for(let i=0;i<bytes.length;i++) str+=String.fromCharCode(bytes[i]);
+    const mm=str.match(/%TRACKDATA (\S+)/);
+    if(!mm){$("teacher-err").textContent="In dieser PDF wurden keine Tracking-Daten gefunden.";return;}
+    teacherBundle=mm[1];
+    $("code-area").classList.remove("hidden");
+    setTimeout(()=>$("code-input").focus(),40);
+  };
+  fr.onerror=()=>{$("teacher-err").textContent="Datei konnte nicht gelesen werden.";};
+  fr.readAsArrayBuffer(file);
+}
+$("pdf-input").addEventListener("change",e=>{const f=e.target.files[0];if(f)readPdfFile(f);});
+const dropZone=document.querySelector(".drop");
+["dragover","dragenter"].forEach(ev=>dropZone.addEventListener(ev,e=>{e.preventDefault();dropZone.style.borderColor="#8a6a3c";}));
+["dragleave","drop"].forEach(ev=>dropZone.addEventListener(ev,e=>{e.preventDefault();dropZone.style.borderColor="";}));
+dropZone.addEventListener("drop",e=>{const f=e.dataTransfer.files[0];if(f)readPdfFile(f);});
+
+async function showTeacherResult(){
+  const code=$("code-input").value.trim();
+  $("teacher-err").textContent="";
+  if(!teacherBundle)return;
+  try{
+    const json=await aesDecrypt(teacherBundle,code);
+    const p=JSON.parse(json);
+    $("result").innerHTML=renderAnalysis(p);
+  }catch(err){
+    $("result").innerHTML="";
+    $("teacher-err").textContent="Falscher Code.";
+  }
+}
+$("code-btn").addEventListener("click",showTeacherResult);
+$("code-input").addEventListener("keydown",e=>{if(e.key==="Enter")showTeacherResult();});
+
+/* ============================================================
+   Auto-Start aus dem Escape-Room (überspringt die Anmeldung)
+   ============================================================ */
+function buildPrefill(tasks){
+  const lines=[];
+  tasks.forEach((task,i)=>{
+    lines.push("Aufgabe "+(i+1));
+    lines.push(task);
+    for(let k=0;k<8;k++) lines.push("");   // 8 Leerzeilen Lösungsraum
+  });
+  return lines.join("\n");
+}
+(function autoStartFromEscape(){
+  const D=window.__ESCAPE_DATA__;
+  if(!D) return;                                   // ohne Daten: normaler Anmeldebildschirm
+  studentVorname=(D.firstName||"").trim();
+  studentNachname=(D.lastName||"").trim();
+  $("who-name").textContent=(studentVorname+" "+studentNachname).trim();
+  const tasks=Array.isArray(D.tasks)?D.tasks:[];
+  const prefill=tasks.length?buildPrefill(tasks):"";
+  const now=Date.now();
+  ed.value=prefill;
+  prevValue=prefill;
+  recs=prefill.split("").map(()=>({src:"s",t:now}));   // vorbefüllter Text = System (grau, nicht gezählt)
+  updateCharcount();
+  show("screen-editor");
+  // Cursor an den Anfang des ersten Lösungsbereichs setzen (nach Aufgabe 1)
+  setTimeout(()=>{
+    ed.focus();
+    const firstGap=prefill.indexOf("\n\n");
+    const pos=firstGap>=0?firstGap+2:prefill.length;
+    try{ ed.setSelectionRange(pos,pos); }catch(e){}
+  },50);
+})();
+<\/script>
+</body>
+</html>
+
+</script>
+
+<script>
+"use strict";
+
+/* ============================================================
+   KONFIGURATION
+   ============================================================ */
+const CODE_WORD = 'CHECK';
+const MAGIC = 2;
+
+/* ============================================================
+   STATE
+   ============================================================ */
+let state = {
+  screen:'start',
+  firstName:'', lastName:'', birthDate:'',
+  code:'',
+  solved:[false,false,false,false,false],
+  letters:['_','_','_','_','_'],
+  mistakes:[null,null,null,null,null],
+  attempts:[0,0,0,0,0],
+  completedAt:null,
+};
+window.state = state;
+
+function recordAttempt(roomIdx, errorData){
+  state.attempts[roomIdx]++;
+  if(state.attempts[roomIdx] === 1 && errorData && errorData.errors && errorData.errors.length > 0){
+    state.mistakes[roomIdx] = errorData;
+  }
+}
+
+function computeCode(birthDigits){
+  // birthDigits = "TTMMJJJJ" → Geburtstagszahl × 1104 + 2
+  const n = parseInt(birthDigits, 10);
+  return String(n * 1104 + MAGIC);
+}
+
+/* ============================================================
+   MINI PDF WRITER (self-contained, no dependencies)
+   PDF 1.4 · Helvetica + Helvetica-Bold (WinAnsi)
+   ============================================================ */
+const WIN_ANSI_MAP = {
+  'ä':0xE4,'ö':0xF6,'ü':0xFC,'Ä':0xC4,'Ö':0xD6,'Ü':0xDC,'ß':0xDF,
+  '€':0x80,'‚':0x82,'„':0x84,'…':0x85,'†':0x86,'‡':0x87,
+  '‰':0x89,'‹':0x8B,"\u2018":0x91,"\u2019":0x92,"\u201C":0x93,"\u201D":0x94,
+  '•':0x95,'–':0x96,'—':0x97,'™':0x99,'›':0x9B,
+  '¡':0xA1,'«':0xAB,'»':0xBB,'·':0xB7,'×':0xD7,'°':0xB0,
+  '²':0xB2,'³':0xB3,'½':0xBD,'¼':0xBC,'¾':0xBE,'¿':0xBF,
+};
+const FALLBACK_MAP = {
+  '→':'->','←':'<-','↑':'^','↓':'v','✓':'v','✗':'x','✕':'x','★':'*','☆':'*',
+  '\u00A0':' ','\u2009':' ','\u200B':'',
+};
+function encodeWinAnsi(str){
+  const bytes=[];
+  for(const ch of str){
+    const code=ch.charCodeAt(0);
+    if(code<128) bytes.push(code);
+    else if(WIN_ANSI_MAP[ch]!==undefined) bytes.push(WIN_ANSI_MAP[ch]);
+    else if(FALLBACK_MAP[ch]!==undefined){ for(const sub of FALLBACK_MAP[ch]) bytes.push(sub.charCodeAt(0)&0xFF); }
+    else if(code<=255) bytes.push(code);
+    else bytes.push(0x3F);
+  }
+  return bytes;
+}
+const HELV_W=(()=>{
+  const w=new Array(256).fill(500);
+  const widths={' ':278,'!':278,'"':355,'#':556,'$':556,'%':889,'&':667,"'":191,'(':333,')':333,'*':389,'+':584,',':278,'-':333,'.':278,'/':278,'0':556,'1':556,'2':556,'3':556,'4':556,'5':556,'6':556,'7':556,'8':556,'9':556,':':278,';':278,'<':584,'=':584,'>':584,'?':556,'@':1015,'A':667,'B':667,'C':722,'D':722,'E':667,'F':611,'G':778,'H':722,'I':278,'J':500,'K':667,'L':556,'M':833,'N':722,'O':778,'P':667,'Q':778,'R':722,'S':667,'T':611,'U':722,'V':667,'W':944,'X':667,'Y':667,'Z':611,'[':278,'\\':278,']':278,'^':469,'_':556,'`':333,'a':556,'b':556,'c':500,'d':556,'e':556,'f':278,'g':556,'h':556,'i':222,'j':222,'k':500,'l':222,'m':833,'n':556,'o':556,'p':556,'q':556,'r':333,'s':500,'t':278,'u':556,'v':500,'w':722,'x':500,'y':500,'z':500,'{':334,'|':260,'}':334,'~':584,'ä':556,'ö':556,'ü':556,'Ä':667,'Ö':778,'Ü':722,'ß':611,'€':556,'–':556,'—':1000,'«':556,'»':556,'·':278,'°':400,'•':350};
+  for(const k in widths){ const code=WIN_ANSI_MAP[k]!==undefined?WIN_ANSI_MAP[k]:k.charCodeAt(0); if(code<256) w[code]=widths[k]; }
+  return w;
+})();
+function pdfStringWidth(str,fontSize,isBold){
+  const bytes=encodeWinAnsi(str); let total=0;
+  for(const b of bytes) total += (HELV_W[b]||500)*(isBold?1.04:1);
+  return total*fontSize/1000;
+}
+class PdfDoc{
+  constructor(){ this.pages=[]; this.pageW=595; this.pageH=842; this.margin=56; this.cursorY=0; this.currentContent=[]; }
+  startPage(){ this.cursorY=this.pageH-this.margin; this.currentContent=[]; }
+  endPage(){ this.pages.push({content:this.currentContent.join('\n')}); }
+  _escapedString(str){
+    const bytes=encodeWinAnsi(str); let s='(';
+    for(const b of bytes){ if(b===0x28||b===0x29||b===0x5C) s+='\\'; s+=String.fromCharCode(b); }
+    return s+')';
+  }
+  text(str,x,y,fontSize,isBold,color){
+    const fontKey=isBold?'F2':'F1'; const c=color||[0,0,0]; const pdfStr=this._escapedString(str);
+    this.currentContent.push(`${c[0]/255} ${c[1]/255} ${c[2]/255} rg\nBT\n/${fontKey} ${fontSize} Tf\n${x} ${y} Td\n${pdfStr} Tj\nET`);
+  }
+  rect(x,y,w,h,fill,stroke){
+    let cmd='';
+    if(fill) cmd+=`${fill[0]/255} ${fill[1]/255} ${fill[2]/255} rg\n`;
+    if(stroke) cmd+=`${stroke[0]/255} ${stroke[1]/255} ${stroke[2]/255} RG\n`;
+    cmd+=`${x} ${y} ${w} ${h} re\n`;
+    if(fill&&stroke) cmd+='B'; else if(fill) cmd+='f'; else if(stroke) cmd+='S';
+    this.currentContent.push(cmd);
+  }
+  line(x1,y1,x2,y2,color,width){
+    const c=color||[0,0,0];
+    this.currentContent.push(`${c[0]/255} ${c[1]/255} ${c[2]/255} RG\n${width||0.5} w\n${x1} ${y1} m ${x2} ${y2} l S`);
+  }
+  paragraph(str,x,y,width,fontSize,isBold,color,leading){
+    if(!leading) leading=fontSize*1.4;
+    const words=String(str).split(/\s+/); let line=''; let curY=y;
+    for(const word of words){
+      if(!word) continue;
+      const test=line?line+' '+word:word;
+      if(pdfStringWidth(test,fontSize,isBold)<=width){ line=test; }
+      else{
+        if(line){ this.text(line,x,curY,fontSize,isBold,color); curY-=leading; line=word; }
+        else{ this.text(word,x,curY,fontSize,isBold,color); curY-=leading; }
+      }
+    }
+    if(line){ this.text(line,x,curY,fontSize,isBold,color); curY-=leading; }
+    return curY;
+  }
+  build(){
+    const objects=[null,null,
+      '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>',
+      '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>'];
+    const pageIds=[];
+    for(const page of this.pages){
+      objects.push(`<< /Length ${page.content.length} >>\nstream\n${page.content}\nendstream`);
+      const contentId=objects.length;
+      objects.push(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${this.pageW} ${this.pageH}] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents ${contentId} 0 R >>`);
+      pageIds.push(objects.length);
+    }
+    objects[1]=`<< /Type /Pages /Kids [${pageIds.map(i=>i+' 0 R').join(' ')}] /Count ${pageIds.length} >>`;
+    objects[0]='<< /Type /Catalog /Pages 2 0 R >>';
+    let pdf='%PDF-1.4\n%\xC4\xC5\xC6\xC7\n'; const offsets=[0];
+    for(let i=0;i<objects.length;i++){ offsets.push(pdf.length); pdf+=`${i+1} 0 obj\n${objects[i]}\nendobj\n`; }
+    const xrefOffset=pdf.length;
+    pdf+=`xref\n0 ${objects.length+1}\n0000000000 65535 f \n`;
+    for(let i=1;i<=objects.length;i++) pdf+=String(offsets[i]).padStart(10,'0')+' 00000 n \n';
+    pdf+=`trailer\n<< /Size ${objects.length+1} /Root 1 0 R >>\nstartxref\n${xrefOffset}\n%%EOF\n`;
+    return pdf;
+  }
+  toBase64(trailerComment){
+    let pdf=this.build();
+    if(trailerComment) pdf+=trailerComment;   // unsichtbar nach %%EOF (von PDF-Viewern ignoriert)
+    return btoa(pdf);
+  }
+}
+
+
+/* ============================================================
+   LÖSUNGSERLÄUTERUNGEN (für PDF 1, Seite 2)
+   ============================================================ */
+const SOLUTION_NOTES = [
+  { room:'Beweisstück 01 · Fake, Fehler, Witz oder Meinung?',
+    text:'In dieser Etappe ging es darum, vier Dinge sauber auseinanderzuhalten. Desinformation ist eine absichtlich falsche Information: Jemand weiß, dass etwas nicht stimmt, und verbreitet es trotzdem, um zu täuschen, Aufmerksamkeit zu bekommen oder anderen zu schaden. Falschinformation ist ebenfalls falsch, wird aber versehentlich weitergegeben – zum Beispiel, wenn jemand einen fünf Jahre alten Artikel teilt und ihn für aktuell hält. Satire ist bewusst übertrieben oder erfunden, will aber gar nicht wirklich täuschen, sondern unterhalten und zum Nachdenken bringen – wie die Schlagzeilen des „Postillon" oder der „heute-show". Eine Meinung schließlich ist weder wahr noch falsch, sondern eine persönliche Bewertung („Unsere Mensa ist die beste"). Die Schlüsselfrage lautet immer: Welche Absicht steckt dahinter? Will mich jemand täuschen, hat sich jemand geirrt, will jemand Witze machen – oder wird hier gar keine Tatsache behauptet? Beim Post von @lichtenberg.leaks sprachen gleich mehrere Signale für Desinformation: ein angebliches „Geheimdokument" ohne Beleg, Großbuchstaben und Alarm-Emojis sowie künstlicher Zeitdruck („Teilen, bevor es gelöscht wird!").' },
+  { room:'Beweisstück 02 · Warum explodiert so etwas?',
+    text:'Hier ging es um die Frage, warum sich Falschmeldungen in sozialen Medien so schnell verbreiten. Der Algorithmus von Plattformen wie TikTok oder Instagram entscheidet, welche Beiträge vielen Menschen angezeigt werden – und er belohnt vor allem Interaktion: Likes, Kommentare, Teilen und lange Ansichtszeiten. Beiträge, die starke Gefühle wie Empörung, Angst oder Überraschung auslösen, bekommen besonders viel Interaktion und dadurch immer mehr Reichweite – ein Kreislauf. Eine große Studie von Forschern des MIT (veröffentlicht 2018 in der Fachzeitschrift „Science") untersuchte Millionen Kurznachrichten und fand heraus: Falschmeldungen erreichten 1.500 Menschen rund sechsmal schneller als wahre Meldungen und wurden deutlich häufiger weiterverbreitet – vor allem, weil sie neuer, überraschender und emotionaler wirken. Verstärkt wird das durch die Filterblase (der Algorithmus zeigt dir mehr von dem, was du schon angeklickt hast) und die Echokammer (in deinem Umfeld bestätigen sich alle gegenseitig, Gegenmeinungen tauchen kaum noch auf). Und mit KI-Bildgeneratoren lassen sich täuschend echte Fotos heute in Sekunden erfinden – wie das weltweit geteilte KI-Bild vom Papst in der weißen Daunenjacke von 2023.' },
+  { room:'Beweisstück 03 · Wem gehört die Nachricht? Der Fall NIUS',
+    text:'Diese Etappe hat gezeigt, warum man bei jeder Nachrichtenquelle vier Fragen stellen sollte: Wer schreibt hier? Wem gehört die Seite? Wer bezahlt sie? Und wer kontrolliert sie? Als reales Beispiel diente die 2023 gegründete Nachrichtenseite NIUS. Ihr Chefredakteur ist Julian Reichelt, der 2021 seinen Posten als „Bild"-Chefredakteur nach Vorwürfen wegen seines Verhaltens gegenüber Mitarbeiterinnen verlassen musste. Finanziert wird NIUS von dem Unternehmer Frank Gotthardt, der zugleich als Großspender der CDU aufgetreten ist – deshalb wird diskutiert, wie unabhängig ein Medium von seinem Geldgeber und dessen politischen Zielen sein kann. NIUS selbst versteht sich als „Stimme der Mehrheit" und weist den Vorwurf des Rechtspopulismus zurück. Kritiker halten der Seite reißerische Aufmachung und irreführende Meldungen vor; dokumentiert sind außerdem erfundene Zitate, die Reichelt später mit Experimenten mit Künstlicher Intelligenz erklärte. Bei der Kontrolle gibt es zwei Wege: Der Deutsche Presserat ist die freiwillige Selbstkontrolle der Presse und kann bei Verstößen gegen den Pressekodex Rügen aussprechen – NIUS beteiligt sich daran aber nicht. Deshalb ist die Medienanstalt Berlin-Brandenburg zuständig, eine staatsferne Aufsicht, die bei Online-Medien die journalistische Sorgfaltspflicht prüft; sie hat NIUS bereits beanstandet, wogegen sich NIUS vor Gericht wehrt. Wichtig: Ob man ein Medium gut findet, entscheidet jede und jeder selbst – die vier Transparenzfragen gelten für jede Nachrichtenquelle, egal welcher politischen Richtung.' },
+  { room:'Beweisstück 04 · Die Spur ins Ausland: „Doppelgänger"',
+    text:'Der gefälschte „Beweis-Screenshot" im Fall stammte von einer Adresse, die einer echten Nachrichtenseite nur ähnlich sah – und genau diese Methode gibt es in Wirklichkeit. Seit 2022 baut ein aus Russland gesteuertes Netzwerk im Rahmen der sogenannten „Doppelgänger"-Kampagne täuschend echte Kopien bekannter Nachrichtenseiten, zum Beispiel „spiegel.ltd" statt spiegel.de oder „faz.ltd" statt faz.net, und füllt sie mit erfundenen Artikeln. Verbreitet werden die Links über hunderttausende gefälschte Konten, automatisierte Programme (Social Bots) und bezahlte Werbung. Die Ziele laut deutschen Sicherheitsbehörden wie dem Verfassungsschutz und dem BSI: Ängste verstärken, die Gesellschaft spalten, die Unterstützung für die Ukraine schwächen und Wahlen beeinflussen – in internen Unterlagen der beteiligten russischen Agentur ist ausdrücklich davon die Rede, die „Zukunftsangst" der Deutschen zu erhöhen. Das Ausmaß ist riesig: Das Auswärtige Amt zählte in gut einem Jahr über 12.900 deutschsprachige Fake-Artikel – im Durchschnitt einer alle 50 Minuten. 2024 ließ die US-Justiz 32 dieser Internetadressen beschlagnahmen. Der wichtigste Selbstschutz ist ein genauer Blick auf die Adresszeile, besonders auf die Endung – und im Zweifel die offizielle Adresse selbst einzutippen, statt einem Link zu folgen.' },
+  { room:'Beweisstück 05 · Der finale Faktencheck',
+    text:'In der letzten Etappe hast du die fünf Prüfschritte angewendet, mit denen sich fast jede verdächtige Meldung entlarven lässt. Erstens: Quelle prüfen – wer schreibt hier, und gibt es ein Impressum? In Deutschland ist ein Impressum für solche Seiten Pflicht; fehlt es, ist das ein Alarmsignal. Zweitens: die Adresszeile exakt lesen, denn Fälschungen verraten sich oft nur durch eine andere Endung oder einen kleinen Zusatz. Drittens: das Datum prüfen – viele „Aufreger" sind in Wahrheit alte, längst überholte Meldungen. Viertens: die Bild-Rückwärtssuche – damit findet man heraus, woher ein Foto wirklich stammt; im Fall @lichtenberg.leaks stammte das „Geheimdokument"-Foto aus einem drei Jahre alten Artikel über eine ganz andere Stadt. Fünftens: der Quervergleich – berichten seriöse Medien dasselbe, und gibt es schon einen Faktencheck, etwa von Correctiv, der dpa oder dem ARD-Faktenfinder? Im Fall der angeblichen Schulschließung dementierten Schulleitung und Staatliches Schulamt, und kein einziges seriöses Medium berichtete. Wichtig ist auch, was KEIN Beweis ist: Viele Likes, viele Kommentare oder die Aussage „Das haben schon ganz viele geteilt" sagen nichts über den Wahrheitsgehalt aus. Das Lösungswort dieses Escape-Rooms bringt es auf den Punkt: CHECK – erst prüfen, dann teilen.' },
+];
+
+const ROOM_LABELS = [
+  'Beweisstück 01 · Fake, Fehler, Witz oder Meinung?',
+  'Beweisstück 02 · Warum explodiert so etwas?',
+  'Beweisstück 03 · Wem gehört die Nachricht?',
+  'Beweisstück 04 · Die Spur ins Ausland',
+  'Beweisstück 05 · Der finale Faktencheck',
+];
+
+/* ============================================================
+   PDF 1 — „Überblick deiner Antworten & Erläuterungen"
+   ============================================================ */
+function fmtDateTime(d){
+  if(!d) d=new Date();
+  const date=d.toLocaleDateString('de-DE');
+  const time=d.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'});
+  return date+', '+time+' Uhr';
+}
+
+function generateOverviewPdf(){
+  const doc=new PdfDoc();
+  const W=doc.pageW,H=doc.pageH,M=doc.margin; const CW=W-2*M;
+  const PRIMARY=[214,41,118], ACCENT=[250,126,30], RED=[237,73,86], GREEN=[31,158,84], MUTE=[130,130,130], TEXT=[38,38,38];
+
+  function header(title){
+    doc.startPage();
+    doc.rect(0,H-72,W,72,PRIMARY);
+    doc.text(title,M,H-38,18,true,[255,255,255]);
+    doc.text('Politik & Wirtschaft · Fake News im Netz · Escape-Room „Der Fall @lichtenberg.leaks"',M,H-58,9,false,[252,224,238]);
+    return H-72-22;
+  }
+  function ensure(y,need){ if(y-need<70){ doc.endPage(); return header('Überblick deiner Antworten & Erläuterungen'); } return y; }
+
+  let y=header('Überblick deiner Antworten & Erläuterungen');
+
+  // Pflichthinweis (fett) + Feiditor-Fallback (ganz oben)
+  doc.rect(M,y-82,CW,82,[254,240,224]);
+  doc.rect(M,y-82,3,82,ACCENT);
+  let yTop=doc.paragraph('Diese Datei musst du bei Moodle in der dafür vorgesehenen Abgabe hochladen, um deinem Lehrer nachzuweisen, dass du den Escape-Room erfolgreich absolviert hast.',
+    M+12,y-16,CW-24,10.5,true,PRIMARY,13.5);
+  doc.paragraph('Notfall-Tipp: Falls du den Link zum digitalen Arbeitsblatt (Feiditor) nicht mehr hast, kannst du diese PDF-Datei auf https://feiditor.janrickmer.de/ hochladen, um den Feiditor mit deinen Aufgaben erneut zu öffnen.',
+    M+12,yTop-4,CW-24,9,false,MUTE,12);
+  y-=82+14;
+
+  // Identifikationsblock
+  const blockH=78;
+  doc.rect(M,y-blockH,CW,blockH,[251,231,241]);
+  doc.rect(M,y-blockH,3,blockH,ACCENT);
+  doc.text('NAME',M+14,y-16,8,true,ACCENT);
+  doc.text(state.firstName+' '+state.lastName,M+14,y-31,13,true,PRIMARY);
+  doc.text('GEBURTSDATUM',M+14,y-49,8,true,ACCENT);
+  doc.text(state.birthDate,M+14,y-63,11,false,TEXT);
+  doc.text('BESTÄTIGUNGSCODE',M+300,y-16,8,true,ACCENT);
+  doc.text(state.code,M+300,y-31,13,true,PRIMARY);
+  doc.text('ABGESCHLOSSEN AM',M+300,y-49,8,true,ACCENT);
+  doc.text(fmtDateTime(state.completedAt),M+300,y-63,11,false,TEXT);
+  y-=blockH+18;
+
+  y=doc.paragraph('Diese Datei zeigt dir, was du beim ersten Versuch in jedem Beweisstück geantwortet hast. Jede Etappe hast du am Ende richtig gelöst – diese Übersicht soll dir nur helfen zu sehen, wo du anfangs noch danebenlagst. Auf Seite 2 findest du ausführliche Lösungserläuterungen zum Nachlesen.',
+    M,y,CW,10.5,false,TEXT,14);
+  y-=8;
+
+  const totalErrors=state.mistakes.reduce((a,m)=>a+(m&&m.errors?m.errors.length:0),0);
+  const perfectRooms=state.attempts.filter((a,i)=>a>=1 && (!state.mistakes[i]||!state.mistakes[i].errors||state.mistakes[i].errors.length===0)).length;
+  doc.rect(M,y-34,CW,34,[232,246,238]);
+  doc.rect(M,y-34,3,34,GREEN);
+  doc.text('ÜBERSICHT',M+14,y-13,8,true,GREEN);
+  doc.text(`Etappen im ersten Versuch fehlerfrei: ${perfectRooms} von 5   ·   Fehler im ersten Versuch insgesamt: ${totalErrors}`,M+14,y-26,10.5,true,TEXT);
+  y-=48;
+
+  for(let i=0;i<5;i++){
+    y=ensure(y,64);
+    doc.text(ROOM_LABELS[i],M,y,12.5,true,PRIMARY);
+    doc.line(M,y-4,M+CW,y-4,ACCENT,0.8);
+    y-=18;
+    const attempts=state.attempts[i]; const m=state.mistakes[i];
+    const attemptsLabel=attempts===1?'1 Versuch':attempts+' Versuche';
+    if(!m||!m.errors||m.errors.length===0){
+      y=doc.paragraph('Fehlerfrei beim ersten Versuch gelöst. ('+attemptsLabel+')',M,y,CW,10.5,true,GREEN,14); y-=8; continue;
+    }
+    y=doc.paragraph('Benötigt: '+attemptsLabel+'. Beim ersten Versuch war Folgendes nicht korrekt:',M,y,CW,10.5,false,MUTE,14); y-=4;
+    for(const err of m.errors){
+      y=ensure(y,52);
+      doc.text('•',M,y,11,true,RED);
+      if(err.kind==='mc_falsch'){
+        y=doc.paragraph(err.item,M+14,y,CW-14,10.5,true,TEXT,13);
+        y=doc.paragraph('Deine Wahl: '+err.wrongAnswer,M+14,y,CW-14,10,false,RED,13);
+        y=doc.paragraph('Richtig: '+err.correctAnswer,M+14,y,CW-14,10,true,GREEN,13);
+      } else if(err.kind==='luecke_falsch'){
+        y=doc.paragraph(err.item,M+14,y,CW-14,10.5,true,TEXT,13);
+        y=doc.paragraph('Deine Eingabe: '+err.wrongAnswer+'   ·   Richtig: '+err.correctAnswer,M+14,y,CW-14,10,false,MUTE,13);
+      } else if(err.kind==='zuordnung_falsch'){
+        y=doc.paragraph(err.item,M+14,y,CW-14,10.5,true,TEXT,13);
+        y=doc.paragraph('Du zugeordnet: '+err.wrongAnswer+'   ·   Richtig: '+err.correctAnswer,M+14,y,CW-14,10,false,MUTE,13);
+      } else if(err.kind==='falsch_gewaehlt'){
+        y=doc.paragraph('Falsch ausgewählt: "'+err.item+'"',M+14,y,CW-14,10.5,true,TEXT,13);
+        if(err.explanation) y=doc.paragraph('→ '+err.explanation,M+14,y,CW-14,10,false,MUTE,13);
+      } else if(err.kind==='uebersehen'){
+        y=doc.paragraph('Übersehen (gehörte dazu): "'+err.item+'"',M+14,y,CW-14,10.5,true,TEXT,13);
+        if(err.explanation) y=doc.paragraph('→ '+err.explanation,M+14,y,CW-14,10,false,MUTE,13);
+      } else if(err.kind==='falsch_einsortiert'){
+        y=doc.paragraph('"'+err.item+'"',M+14,y,CW-14,10.5,true,TEXT,13);
+        y=doc.paragraph('Du einsortiert: '+err.wrongAnswer+'   ·   Richtig: '+err.correctAnswer,M+14,y,CW-14,10,false,MUTE,13);
+      } else if(err.kind==='falsche_eingabe'){
+        y=doc.paragraph(err.item,M+14,y,CW-14,10.5,true,TEXT,13);
+        y=doc.paragraph('Deine Eingabe: "'+err.wrongAnswer+'"   ·   Richtig: '+err.correctAnswer,M+14,y,CW-14,10,false,MUTE,13);
+      }
+      y-=5;
+    }
+    y-=10;
+  }
+
+  y=ensure(y,40);
+  doc.line(M,y,M+CW,y,[200,200,200],0.4); y-=14;
+  doc.text('Bestätigungscode für Moodle: '+state.code,M,y,10,true,PRIMARY);
+  y-=22;
+  doc.text('Copyright Jan-Rickmer Feindt',M,y,8.5,false,MUTE);
+  doc.endPage();
+
+  /* ---- Seite 2: Lösungserläuterungen ---- */
+  let y2=header('Lösungserläuterungen');
+  y2=doc.paragraph('Hier werden die richtigen Lösungen der fünf Beweisstücke noch einmal genauer erklärt. Lies sie in Ruhe durch – so kannst du das Wissen aus dem Escape-Room für die Aufgaben im digitalen Arbeitsblatt und im Unterricht nutzen.',M,y2,CW,10.5,false,TEXT,14);
+  y2-=10;
+  function ensure2(y,need){ if(y-need<70){ doc.endPage(); return header('Lösungserläuterungen'); } return y; }
+  for(const note of SOLUTION_NOTES){
+    y2=ensure2(y2,90);
+    doc.text(note.room,M,y2,12.5,true,PRIMARY);
+    doc.line(M,y2-4,M+CW,y2-4,ACCENT,0.8);
+    y2-=18;
+    y2=doc.paragraph(note.text,M,y2,CW,10.5,false,TEXT,14.5);
+    y2-=14;
+  }
+  y2=ensure2(y2,30);
+  doc.line(M,y2,M+CW,y2,[200,200,200],0.4); y2-=14;
+  doc.text('Copyright Jan-Rickmer Feindt',M,y2,8.5,false,MUTE);
+  doc.endPage();
+
+  // Versteckte Rekonstruktionsdaten für den Standalone-Feiditor (nach %%EOF, von Viewern ignoriert).
+  // Enthält: Vorname, Nachname, die sechs Feiditor-Aufgaben und die beiden roten Feldtexte.
+  const escData = {
+    v: state.firstName,
+    n: state.lastName,
+    t: REFLECT_TASKS.slice(0, 6),
+    r: RED_FIELDS,
+  };
+  let escB64 = '';
+  try { escB64 = btoa(unescape(encodeURIComponent(JSON.stringify(escData)))); } catch (e) { escB64 = ''; }
+  const trailer = escB64 ? ('\n%ESCAPEDATA ' + escB64 + '\n') : '';
+  return doc.toBase64(trailer);
+}
+
+/* ============================================================
+   PDF 2 — Reflexions-Datei
+   ============================================================ */
+const REFLECT_TASKS = [
+  'Erkläre in eigenen Worten den Unterschied zwischen Desinformation, Falschinformation und Satire. Nenne zu jedem Begriff ein eigenes Beispiel. (Etappe 1)',
+  'Stell dir vor, du sollst einem Sechstklässler erklären, warum sich Falschmeldungen auf TikTok oder Instagram oft schneller verbreiten als echte Nachrichten. Wie würdest du das in eigenen Worten erklären? (Etappe 2)',
+  'Fasse mit eigenen Worten zusammen, warum die Nachrichtenseite NIUS in der Kritik steht – und warum es wichtig ist zu wissen, wem ein Medium gehört und wer es bezahlt. (Etappe 3)',
+  'Beschreibe, wie die „Doppelgänger"-Kampagne funktioniert und welche Ziele damit verfolgt werden. (Etappe 4)',
+  'Vergleiche Fake News, die einzelne Personen verbreiten, mit Desinformationskampagnen fremder Staaten: Nenne mindestens je zwei Gemeinsamkeiten und zwei Unterschiede. (Etappen 1 bis 4)',
+  'Nenne vier Prüfschritte, mit denen du eine verdächtige Meldung checken kannst, und erkläre kurz, warum jeder Schritt hilft. (Etappe 5)',
+  'Bearbeite nun auf Moodle die Aufgabe „Text verfassen …".',
+  'Lade diese Reflexions-Datei in der dafür vorgesehenen Abgabe bei Moodle hoch.',
+];
+
+// Texte der beiden roten Felder des Feiditors – exakt wie im eingebetteten Feiditor.
+// Werden (zusammen mit Name & Aufgaben) versteckt in die Überblick-PDF eingebettet,
+// damit der Standalone-Feiditor sie bei einem PDF-Upload rekonstruieren kann.
+const RED_FIELDS = [
+  'Wandle diesen Text nun in eine PDF-Datei um und lade diese PDF-Datei in der korrekten Abgabe auf Moodle hoch.',
+  'Aufgabe 7: Nachdem du die Lösungen zu Aufgaben 1-6 auf Moodle hochgeladen hast, bearbeitest du die auf Moodle verlinkte Aufgabe "Text verfassen ..."',
+];
+
+function generateReflexionPdf(){
+  const doc=new PdfDoc();
+  const W=doc.pageW,H=doc.pageH,M=doc.margin; const CW=W-2*M;
+  const PRIMARY=[214,41,118], ACCENT=[250,126,30], MUTE=[130,130,130], TEXT=[38,38,38], LINE=[205,205,205];
+
+  function header(){
+    doc.startPage();
+    doc.rect(0,H-72,W,72,PRIMARY);
+    doc.text('Reflexion — Fake News im Netz',M,H-38,18,true,[255,255,255]);
+    doc.text('Escape-Room „Der Fall @lichtenberg.leaks" · Bearbeite die Aufgaben in eigenen Worten',M,H-58,9,false,[252,224,238]);
+    return H-72-22;
+  }
+  function ensure(y,need){ if(y-need<70){ doc.endPage(); return header(); } return y; }
+
+  let y=header();
+
+  // Identifikationsblock
+  const bH=58;
+  doc.rect(M,y-bH,CW,bH,[251,231,241]);
+  doc.rect(M,y-bH,3,bH,ACCENT);
+  doc.text('NAME',M+14,y-15,8,true,ACCENT);
+  doc.text(state.firstName+' '+state.lastName,M+14,y-30,12.5,true,PRIMARY);
+  doc.text('GEBURTSDATUM',M+260,y-15,8,true,ACCENT);
+  doc.text(state.birthDate,M+260,y-30,11,false,TEXT);
+  doc.text('ESCAPE-ROOM ABGESCHLOSSEN AM',M+14,y-46,8,true,ACCENT);
+  doc.text(fmtDateTime(state.completedAt),M+200,y-46,10,false,TEXT);
+  y-=bH+16;
+
+  y=doc.paragraph('Diese Reflexion vertieft die Inhalte aus dem Escape-Room. Beantworte die folgenden Aufgaben in eigenen Worten – stichpunktartig oder in ganzen Sätzen.',
+    M,y,CW,10.5,false,TEXT,14);
+  y-=8;
+
+  for(let i=0;i<REFLECT_TASKS.length;i++){
+    const isLast=i===REFLECT_TASKS.length-1;
+    const isSecondLast=i===REFLECT_TASKS.length-2;
+    y=ensure(y,isLast||isSecondLast?70:120);
+    doc.text('Aufgabe '+(i+1),M,y,11,true,ACCENT);
+    y-=15;
+    y=doc.paragraph(REFLECT_TASKS[i],M,y,CW,11,true,TEXT,15);
+    y-=8;
+    if(isLast || isSecondLast){
+      doc.rect(M,y-12,12,12,null,MUTE);
+      doc.text('erledigt',M+20,y-10,9.5,false,MUTE);
+      y-=26;
+    } else {
+      const linesCount=4;
+      for(let l=0;l<linesCount;l++){ y-=20; doc.line(M,y,M+CW,y,LINE,0.5); }
+      y-=14;
+    }
+  }
+
+  y=ensure(y,30);
+  doc.line(M,y,M+CW,y,LINE,0.4); y-=14;
+  doc.text('Copyright Jan-Rickmer Feindt',M,y,8.5,false,MUTE);
+  doc.endPage();
+  return doc.toBase64();
+}
+/* ============================================================
+   DOWNLOAD-HELFER
+   ============================================================ */
+function translit(s){
+  return (s||'').replace(/ä/g,'ae').replace(/ö/g,'oe').replace(/ü/g,'ue')
+    .replace(/Ä/g,'Ae').replace(/Ö/g,'Oe').replace(/Ü/g,'Ue').replace(/ß/g,'ss')
+    .replace(/[^a-zA-Z0-9-]/g,'');
+}
+function downloadPdfBase64(b64,filename){
+  const binary=atob(b64); const bytes=new Uint8Array(binary.length);
+  for(let i=0;i<binary.length;i++) bytes[i]=binary.charCodeAt(i);
+  const blob=new Blob([bytes],{type:'application/pdf'});
+  const url=URL.createObjectURL(blob);
+  const link=document.createElement('a'); link.href=url; link.download=filename;
+  document.body.appendChild(link); link.click(); document.body.removeChild(link);
+  setTimeout(()=>URL.revokeObjectURL(url),1200);
+}
+window.downloadOverviewPDF=()=>{
+  try{
+    const b64=generateOverviewPdf();
+    const clean=(s)=>(s||'').trim().replace(/\s+/g,'-').replace(/[\/\\:*?"<>|]+/g,'');
+    const vn=clean(state.firstName)||'Vorname';
+    const nn=clean(state.lastName)||'Nachname';
+    const filename=`Escape-Room-Überblick_von_${vn}_${nn}.pdf`;
+    // Blob + Object-URL erzeugen
+    const binary=atob(b64); const bytes=new Uint8Array(binary.length);
+    for(let i=0;i<binary.length;i++) bytes[i]=binary.charCodeAt(i);
+    const blob=new Blob([bytes],{type:'application/pdf'});
+    const url=URL.createObjectURL(blob);
+    // 1) PDF in neuem Tab öffnen (die finale Seite bleibt im Ausgangstab bestehen)
+    window.open(url,'_blank');
+    // 2) Dieselbe Datei zusätzlich im Hintergrund herunterladen
+    const link=document.createElement('a'); link.href=url; link.download=filename;
+    document.body.appendChild(link); link.click(); document.body.removeChild(link);
+    // Object-URL erst spät freigeben, damit neuer Tab und Download sicher fertig laden
+    setTimeout(()=>URL.revokeObjectURL(url),60000);
+  }catch(e){ console.error(e); alert('Konnte die Datei „Escape-Room-Überblick" nicht erzeugen: '+e.message); }
+};
+window.downloadReflexionPDF=()=>{
+  try{
+    const b64=generateReflexionPdf();
+    const name=translit(state.lastName)||'Schueler';
+    downloadPdfBase64(b64,`Reflexion_${name}_${state.code}.pdf`);
+  }catch(e){ console.error(e); alert('Konnte die Datei nicht erzeugen: '+e.message); }
+};
+window.openFeiditor=()=>{
+  try{
+    const tplEl=document.getElementById('feiditor-src');
+    if(!tplEl){ alert('Der Feiditor konnte nicht geladen werden.'); return; }
+    // Eingebetteten Feiditor-Quelltext holen und die escapten Script-End-Tags wiederherstellen
+    let html=tplEl.textContent.replace(/<\\\/script>/gi,'<\/script>');
+    // Escape-Room-Daten + die ersten sechs Aufgaben in den Feiditor injizieren (vor </head>)
+    const data={
+      firstName: state.firstName,
+      lastName:  state.lastName,
+      birthDate: state.birthDate,
+      code:      state.code,
+      tasks:     REFLECT_TASKS.slice(0,6)
+    };
+    const inject='<script>window.__ESCAPE_DATA__='+JSON.stringify(data).replace(/</g,'\\u003c')+';<\/script>';
+    if(html.indexOf('</head>')!==-1) html=html.replace('</head>', inject+'\n</head>');
+    else html=inject+html;
+    // Per document.write öffnen, damit der sichere Kontext (crypto.subtle) erhalten bleibt.
+    // Ein Blob-URL würde den secure context verlieren -> Verschlüsselung schlägt fehl.
+    const win=window.open('','_blank');
+    if(!win){ alert('Bitte erlaube Pop-ups für diese Seite, damit sich das digitale Arbeitsblatt öffnen kann.'); return; }
+    win.document.open();
+    win.document.write(html);
+    win.document.close();
+  }catch(e){ console.error(e); alert('Das digitale Arbeitsblatt konnte nicht geöffnet werden: '+e.message); }
+};
+
+/* ============================================================
+   DOM-REFS & SEALS
+   ============================================================ */
+const root=document.getElementById('screenContainer');
+const sealsBox=document.getElementById('progressSeals');
+
+function renderSeals(){
+  sealsBox.innerHTML='';
+  for(let i=0;i<5;i++){
+    const lib=document.createElement('div'); lib.className='seal library';
+    const sc=state.screen;
+    const isLibActive = (sc==='lib'+(i+1));
+    if(isLibActive) lib.classList.add('active');
+    else if(state.solved[i] || sc==='room'+(i+1)
+      || (sc.startsWith('room') && parseInt(sc.slice(4))>i+1)
+      || (sc.startsWith('lib') && parseInt((sc.match(/\d+/)||[0])[0])>i+1)
+      || sc==='final') lib.classList.add('visited');
+    sealsBox.appendChild(lib);
+
+    const s=document.createElement('div'); s.className='seal';
+    if(state.solved[i]){ s.classList.add('solved'); s.textContent=CODE_WORD[i]; }
+    else if(state.screen==='room'+(i+1)){ s.classList.add('active'); s.textContent=i+1; }
+    else s.textContent=i+1;
+    sealsBox.appendChild(s);
+  }
+}
+
+/* ============================================================
+   HELPERS
+   ============================================================ */
+function escapeHtml(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function shuffle(arr){
+  const a=arr.slice();
+  for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
+function normalizeAnswer(s){ return (s||'').toLowerCase().replace(/[^a-zäöüß ]/g,'').replace(/\s+/g,' ').trim(); }
+
+/* ---------- Gestufte Hilfe für Lückentexte ----------
+   Stufe 1–3: immer einfachere Hinweise, ab dem 4. Fehlversuch wird die Lösung genannt. */
+function renderClozeHelp(containerId, blanks, wrongIds, fails){
+  const box=document.getElementById(containerId); if(!box) return;
+  if(!wrongIds.length){ box.className='cloze-help'; box.innerHTML=''; return; }
+  const lvl=Math.min(fails,4);
+  const items=blanks.filter(b=>wrongIds.includes(b.id)).map(b=>{
+    const name=b.label.replace(/\s*\(.*$/,'');
+    const h = lvl>=4 ? '<strong>Lösung: '+b.solution+'</strong>' : b.hints[lvl-1];
+    return `<li><strong>${name}:</strong> ${h}</li>`;
+  }).join('');
+  box.className='cloze-help show';
+  box.innerHTML=`<span class="label">Hilfe zu den Lücken · ${lvl>=4?'Lösung':'Hinweis-Stufe '+lvl+' von 3'}</span><ul>${items}</ul>`;
+}
+
+/* ---------- Instagram-Post-Baustein (für Story & Bibliotheken) ---------- */
+function igPost(o){
+  const heart = o.liked
+    ? '<svg viewBox="0 0 24 24" class="liked"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>'
+    : '<svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>';
+  return `
+    <div class="ig-post${o.slim?' slim':''}">
+      <div class="ig-head">
+        <div class="ig-ava">${o.ava||'?'}</div>
+        <div><div class="ig-user">${o.user}</div><div class="ig-time">${o.time||''}</div></div>
+      </div>
+      <div class="ig-body">${o.body}</div>
+      <div class="ig-foot">
+        ${heart}
+        <svg viewBox="0 0 24 24"><path d="M21 11.5a8.4 8.4 0 0 1-8.5 8.3 8.6 8.6 0 0 1-3.9-.9L3 20l1.2-5.2a8.1 8.1 0 0 1-1-3.9A8.4 8.4 0 0 1 11.7 2.6 8.4 8.4 0 0 1 21 11.5z"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/></svg>
+        <span class="ig-likes">${o.likes||''}</span>
+      </div>
+      ${o.note?`<div class="ig-note">${o.note}</div>`:''}
+    </div>`;
+}
+
+/* ============================================================
+   SCREEN: START (Name + Geburtsdatum)
+   ============================================================ */
+function renderStart(){
+  state.screen='start'; renderSeals();
+  root.innerHTML=`
+    <div class="kicker">Politik &amp; Wirtschaft · Klasse 8 · Fake News im Netz</div>
+    <h1 class="title-mega">Der Fall<br><em>@lichtenberg.leaks</em></h1>
+    <p class="lede">Ein anonymer Account. Ein Post, der explodiert. Und eine Schule in Aufruhr. Bevor die Redaktion loslegt, brauchen wir deine Daten für den Redaktionsausweis.</p>
+
+    <div class="card card-accent" style="max-width:640px;">
+      <h3 style="font-size:21px; margin-bottom:14px;">Anmeldung in der Redaktion</h3>
+      <p class="text-mute" style="margin-bottom:20px; font-size:14.5px;">
+        Trag deinen vollen Namen und dein Geburtsdatum ein. Beides erscheint später auf deinen beiden Dateien für Moodle.
+      </p>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;">
+        <div>
+          <label class="field-label" for="firstNameInput">Vorname</label>
+          <input id="firstNameInput" class="text-input" type="text" autocomplete="given-name" maxlength="40"
+                 onkeydown="if(event.key==='Enter') document.getElementById('lastNameInput').focus()">
+        </div>
+        <div>
+          <label class="field-label" for="lastNameInput">Nachname</label>
+          <input id="lastNameInput" class="text-input" type="text" autocomplete="family-name" maxlength="40"
+                 onkeydown="if(event.key==='Enter') document.getElementById('birthInput').focus()">
+        </div>
+      </div>
+      <div style="max-width:260px;">
+        <label class="field-label" for="birthInput">Geburtsdatum (TT.MM.JJJJ)</label>
+        <input id="birthInput" class="text-input" type="text" inputmode="numeric" maxlength="10" placeholder="TT.MM.JJJJ"
+               oninput="maskBirth(this)" onkeydown="if(event.key==='Enter') submitStart()">
+      </div>
+      <div id="startError" class="input-error"></div>
+      <div class="btn-row">
+        <button class="btn btn-primary btn-arrow" onclick="submitStart()">Weiter zum Fall</button>
+      </div>
+    </div>
+  `;
+  setTimeout(()=>document.getElementById('firstNameInput')?.focus(),100);
+}
+window.maskBirth=(el)=>{
+  let v=el.value.replace(/[^0-9]/g,'').slice(0,8);
+  let out=v;
+  if(v.length>4) out=v.slice(0,2)+'.'+v.slice(2,4)+'.'+v.slice(4);
+  else if(v.length>2) out=v.slice(0,2)+'.'+v.slice(2);
+  el.value=out;
+};
+window.submitStart=()=>{
+  const fn=document.getElementById('firstNameInput').value.trim();
+  const ln=document.getElementById('lastNameInput').value.trim();
+  const bd=document.getElementById('birthInput').value.trim();
+  const err=document.getElementById('startError');
+  function showErr(msg){ err.style.display='block'; err.textContent=msg; }
+  if(fn.length<2||ln.length<2){ showErr('Bitte trag deinen vollen Vor- und Nachnamen ein (jeweils mindestens 2 Zeichen).'); return; }
+  const m=bd.match(/^(\d{2})\.(\d{2})\.(\d{4})$/);
+  if(!m){ showErr('Bitte gib dein Geburtsdatum im Format TT.MM.JJJJ ein (z. B. 07.03.2012).'); return; }
+  const dd=parseInt(m[1],10), mm=parseInt(m[2],10), yyyy=parseInt(m[3],10);
+  if(dd<1||dd>31||mm<1||mm>12||yyyy<1900||yyyy>2026){ showErr('Das Geburtsdatum scheint nicht zu stimmen. Bitte prüfe Tag, Monat und Jahr.'); return; }
+  state.firstName=fn; state.lastName=ln; state.birthDate=bd;
+  const digits=m[1]+m[2]+m[3];
+  state.code=computeCode(digits);
+  renderIntro();
+};
+
+/* ============================================================
+   SCREEN: INTRO (Story)
+   ============================================================ */
+function renderIntro(){
+  state.screen='intro'; renderSeals();
+  root.innerHTML=`
+    <div class="kicker">Der Fall</div>
+    <h1 class="title-mega">Willkommen in der<br>Redaktion, <em>${escapeHtml(state.firstName)}</em></h1>
+    <p class="lede">Heute Morgen, 07:42 Uhr. Dieser Post landet in sämtlichen Klassenchats – und die halbe Schule dreht durch:</p>
+
+    ${igPost({
+      ava:'L', user:'lichtenberg.leaks', time:'vor 47 Minuten',
+      body:'🚨 EILMELDUNG 🚨 Die Lichtenberg-Schule wird nach den Herbstferien <strong>GESCHLOSSEN</strong>! Alle Schüler werden auf andere Schulen verteilt. Ein geheimes Dokument beweist ALLES. 👀<br>❗ TEILEN, bevor es gelöscht wird!!! <span class="tag">#lichtenberg</span> <span class="tag">#schule</span> <span class="tag">#skandal</span>',
+      liked:true, likes:'2.847 Likes · 391 Kommentare',
+      note:'Screenshot aus dem Klassenchat · Absender: unbekannt'
+    })}
+
+    <div class="card card-accent">
+      <div class="briefing">
+        <span class="speaker">Ayla · Chefredakteurin der Schülerzeitung</span>
+        Gut, dass du da bist! Niemand weiß, wer hinter <strong>@lichtenberg.leaks</strong> steckt – aber alle glauben es einfach. In <strong>90 Minuten</strong> tagt die Schulkonferenz, und bis dahin liegt dem Schulleiter unser <strong>Beweis-Dossier</strong> auf dem Tisch: Wir zeigen, dass der Post Fake ist, und wir verfolgen die Spur des Accounts zurück. Dafür sicherst du nacheinander <strong>fünf Beweisstücke</strong>. Vor jedem Beweisstück bekommst du ein <strong style="color:var(--ig-purple)">Redaktions-Briefing</strong> mit dem Wissen, das du brauchst. <strong>Sobald du ein Beweisstück startest, kommst du nicht mehr ins Briefing zurück</strong> – lies also aufmerksam und mach dir Notizen, falls du magst.
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 style="font-size:18px; margin-bottom:10px;">So läuft es ab</h3>
+      <ul class="muted-list">
+        <li>Jedes gesicherte Beweisstück schaltet einen Buchstaben frei. Am Ende ergibt sich das Lösungswort.</li>
+        <li>Falsche Eingaben werden markiert und erklärt – du darfst es erneut versuchen.</li>
+        <li>Am Ende bekommst du deinen Bestätigungscode und zwei Dateien, die du in Moodle hochlädst.</li>
+      </ul>
+      <div style="margin-top:14px; font-size:13.5px; color:var(--ink-mute);">
+        Angemeldet als <strong style="color:var(--ink)">${escapeHtml(state.firstName)} ${escapeHtml(state.lastName)}</strong> · geb. ${escapeHtml(state.birthDate)}
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary btn-arrow" onclick="goLibrary(1)">Erstes Redaktions-Briefing öffnen</button>
+    </div>
+  `;
+}
+
+/* ============================================================
+   ROOM HEADER / FOOTER (shared)
+   ============================================================ */
+function roomHeader(room){
+  return `
+    <div class="room-header">
+      <div class="room-number">${String(room.id).padStart(2,'0')}</div>
+      <div class="room-meta">
+        <div class="room-location">${room.location}</div>
+        <div class="room-name">${room.name}</div>
+      </div>
+    </div>
+    <div class="card card-accent"><div class="briefing"><span class="speaker">Beweisstück ${String(room.id).padStart(2,'0')}</span>${room.briefing}</div></div>
+    <p class="body-lg" style="margin:8px 0 0;"><strong style="color:var(--ig-orange); font-family:var(--font-mono); font-size:11px; letter-spacing:0.16em;">DEINE AUFGABE</strong></p>
+    <p class="body-lg">${room.task}</p>
+  `;
+}
+function roomFooter(hintText,checkFn){
+  return `
+    <div id="statusBox"></div>
+    <div id="hintBox" class="hint-box"><span class="label">Hinweis</span>${hintText}</div>
+    <div class="btn-row"><button class="btn btn-primary" onclick="${checkFn}">Prüfen</button><button class="hint-btn" onclick="showHint()">Hinweis anzeigen</button></div>
+  `;
+}
+window.showHint=()=>{ const h=document.getElementById('hintBox'); if(h) h.classList.add('show'); };
+function showStatus(type,label,msg){
+  const box=document.getElementById('statusBox'); if(!box) return;
+  box.innerHTML=`<div class="status status-${type} show"><span class="label">${label}</span>${msg}</div>`;
+}
+
+/* ============================================================
+   LIBRARIES (Redaktions-Briefings)
+   ============================================================ */
+const LIBRARIES=[
+  // --- B1 ---
+  { id:1, location:'Redaktions-Briefing 01', name:'Fake, Fehler, Witz oder Meinung?',
+    intro:'Bevor du den Post von @lichtenberg.leaks auseinandernimmst, brauchst du das wichtigste Werkzeug der Redaktion: vier Begriffe, die fast alle durcheinanderwerfen – die du ab jetzt aber sauber trennen kannst.',
+    content:`
+      <div class="lib-section">
+        <div class="lib-section-title">Vier Begriffe, die du brauchst</div>
+        <div class="lib-grid">
+          <div class="lib-card">
+            <div class="lib-card-sub">Begriff 1</div>
+            <div class="lib-card-title">Desinformation</div>
+            <div class="lib-card-body"><strong>Absichtlich</strong> falsche Information. Jemand weiß, dass es nicht stimmt – und verbreitet es trotzdem, um zu täuschen, Aufmerksamkeit zu bekommen oder zu schaden. Das ist das, was die meisten mit „Fake News" meinen.</div>
+          </div>
+          <div class="lib-card">
+            <div class="lib-card-sub">Begriff 2</div>
+            <div class="lib-card-title">Falschinformation</div>
+            <div class="lib-card-body">Auch falsch – aber <strong>versehentlich</strong> weitergegeben. Zum Beispiel, wenn deine Oma einen fünf Jahre alten Artikel teilt, weil sie ihn für aktuell hält. Keine Täuschungsabsicht, trotzdem ein Problem.</div>
+          </div>
+          <div class="lib-card">
+            <div class="lib-card-sub">Begriff 3</div>
+            <div class="lib-card-title">Satire</div>
+            <div class="lib-card-body"><strong>Bewusst übertrieben</strong> oder erfunden – aber nicht, um wirklich zu täuschen, sondern um zu unterhalten und zum Nachdenken zu bringen. Beispiele: „Der Postillon", die „heute-show".</div>
+          </div>
+          <div class="lib-card">
+            <div class="lib-card-sub">Begriff 4</div>
+            <div class="lib-card-title">Meinung</div>
+            <div class="lib-card-body">Weder wahr noch falsch, sondern eine <strong>persönliche Bewertung</strong> („Unsere Mensa ist die beste"). Wichtig ist nur, Meinungen nicht mit Tatsachenbehauptungen zu verwechseln.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="lib-section">
+        <div class="lib-section-title">So sehen die vier in freier Wildbahn aus</div>
+        ${igPost({slim:true, ava:'S', user:'schnelle.news24', time:'vor 2 Std.',
+          body:'Ab Montag HANDYVERBOT an allen Schulen in ganz Deutschland!!! 😱 Ein Insider hat es uns verraten. TEILEN!!!',
+          likes:'12.304 Likes', note:'→ Desinformation: erfunden, ohne Beleg, mit Druck zum Teilen.'})}
+        ${igPost({slim:true, ava:'O', user:'omi.hilde52', time:'vor 4 Std.',
+          body:'Habt ihr das gesehen?? Der Bahnhof wird abgerissen! 😢 (Link zu einem Artikel von 2021 – der Abriss wurde längst abgesagt)',
+          likes:'87 Likes', note:'→ Falschinformation: veraltet, aber ohne böse Absicht geteilt.'})}
+        ${igPost({slim:true, ava:'P', user:'der.postillon', time:'vor 6 Std.',
+          body:'Studie: 87 % der Schüler halten Ferien für zu kurz, Lehrer für zu lang anwesend.',
+          likes:'45.921 Likes', note:'→ Satire: bewusst überspitzt, will unterhalten – nicht täuschen.'})}
+        ${igPost({slim:true, ava:'M', user:'mia.aus.der.8b', time:'vor 1 Std.',
+          body:'Also ich finde, der neue Stundenplan ist total unfair. 🙄',
+          likes:'23 Likes', note:'→ Meinung: eine Bewertung, keine Tatsachenbehauptung.'})}
+      </div>
+
+      <div class="lib-section">
+        <div class="lib-section-title">Der Redaktions-Blick auf @lichtenberg.leaks</div>
+        <p>Leg den Post aus dem Klassenchat einmal unter die Lupe. Drei Signale sprechen für eine <strong>absichtliche Täuschung</strong>:</p>
+        <ul class="lib-bullets">
+          <li><strong>„Ein geheimes Dokument beweist alles"</strong> – das angebliche Beweisstück wird behauptet, aber nie gezeigt oder belegt.</li>
+          <li><strong>GROSSBUCHSTABEN und Alarm-Emojis 🚨</strong> – der Post will Panik auslösen, nicht informieren.</li>
+          <li><strong>„Teilen, bevor es gelöscht wird!!!"</strong> – künstlicher Zeitdruck soll verhindern, dass du erst nachdenkst und prüfst.</li>
+        </ul>
+      </div>
+
+      <div class="note-box">
+        <span class="note-label">Merksatz der Redaktion</span>
+        Die Schlüsselfrage ist immer die <strong>Absicht</strong>: Will mich jemand täuschen (Desinformation)? Hat sich jemand geirrt (Falschinformation)? Will jemand Witze machen (Satire)? Oder wird hier gar keine Tatsache behauptet (Meinung)?
+      </div>`,
+    target:'Beweisstück 01' },
+
+  // --- B2 ---
+  { id:2, location:'Redaktions-Briefing 02', name:'Warum explodiert so etwas?',
+    intro:'2.847 Likes in 47 Minuten – wie kann ein erfundener Post so schnell so groß werden? Die Antwort liegt in der Technik der Plattformen und in unseren eigenen Gefühlen.',
+    content:`
+      <div class="lib-section">
+        <div class="lib-section-title">Der Algorithmus – der unsichtbare Türsteher</div>
+        <p>Auf TikTok, Instagram und Co. entscheidet nicht ein Mensch, welche Beiträge du siehst, sondern ein Computerprogramm: der <strong>Algorithmus</strong>. Er zeigt bevorzugt Beiträge, die viel <strong>Interaktion</strong> erzeugen – also Likes, Kommentare, Teilen und lange Ansichtszeiten. Und was erzeugt besonders viel Interaktion? Beiträge, die <strong>starke Gefühle</strong> auslösen: Empörung, Angst, Überraschung. So entsteht ein Kreislauf:</p>
+        <div class="chart-wrap">
+          <svg viewBox="0 0 520 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Kreislauf: Post löst Emotion aus, Emotion erzeugt Interaktion, Interaktion bringt Reichweite, Reichweite zeigt den Post noch mehr Menschen">
+            <text x="260" y="24" text-anchor="middle" fill="#262626" font-family="Poppins,sans-serif" font-size="13" font-weight="700">Der Empörungs-Kreislauf</text>
+            <!-- Pfeile (Kreis) -->
+            <defs>
+              <marker id="arrw" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#8e8e8e"/></marker>
+            </defs>
+            <path d="M 200 70 Q 260 48 320 70" fill="none" stroke="#8e8e8e" stroke-width="2" marker-end="url(#arrw)"/>
+            <path d="M 415 120 Q 445 165 415 210" fill="none" stroke="#8e8e8e" stroke-width="2" marker-end="url(#arrw)"/>
+            <path d="M 320 258 Q 260 280 200 258" fill="none" stroke="#8e8e8e" stroke-width="2" marker-end="url(#arrw)"/>
+            <path d="M 105 210 Q 75 165 105 120" fill="none" stroke="#8e8e8e" stroke-width="2" marker-end="url(#arrw)"/>
+            <!-- Knoten 1: Post -->
+            <rect x="90" y="58" width="120" height="52" rx="12" fill="#feda75"/>
+            <text x="150" y="80" text-anchor="middle" fill="#262626" font-family="Poppins,sans-serif" font-size="12.5" font-weight="700">Aufreger-Post</text>
+            <text x="150" y="97" text-anchor="middle" fill="#262626" font-family="Inter,sans-serif" font-size="10">„Schule wird geschlossen!"</text>
+            <!-- Knoten 2: Emotion -->
+            <rect x="310" y="58" width="120" height="52" rx="12" fill="#fa7e1e"/>
+            <text x="370" y="80" text-anchor="middle" fill="#ffffff" font-family="Poppins,sans-serif" font-size="12.5" font-weight="700">Starke Gefühle</text>
+            <text x="370" y="97" text-anchor="middle" fill="#ffffff" font-family="Inter,sans-serif" font-size="10">Angst · Wut · Schock</text>
+            <!-- Knoten 3: Interaktion -->
+            <rect x="310" y="206" width="120" height="52" rx="12" fill="#d62976"/>
+            <text x="370" y="228" text-anchor="middle" fill="#ffffff" font-family="Poppins,sans-serif" font-size="12.5" font-weight="700">Interaktion</text>
+            <text x="370" y="245" text-anchor="middle" fill="#ffffff" font-family="Inter,sans-serif" font-size="10">Likes · Kommentare · Teilen</text>
+            <!-- Knoten 4: Reichweite -->
+            <rect x="90" y="206" width="120" height="52" rx="12" fill="#962fbf"/>
+            <text x="150" y="228" text-anchor="middle" fill="#ffffff" font-family="Poppins,sans-serif" font-size="12.5" font-weight="700">Mehr Reichweite</text>
+            <text x="150" y="245" text-anchor="middle" fill="#ffffff" font-family="Inter,sans-serif" font-size="10">Algorithmus zeigt ihn allen</text>
+            <text x="260" y="170" text-anchor="middle" fill="#8e8e8e" font-family="Inter,sans-serif" font-size="10.5">… und der Kreislauf beginnt von vorn – immer schneller.</text>
+          </svg>
+          <div class="chart-caption">Eigene Darstellung · vereinfachtes Funktionsprinzip von Empfehlungs-Algorithmen</div>
+        </div>
+      </div>
+
+      <div class="lib-section">
+        <div class="lib-section-title">Die Wissenschaft: Lügen sind schneller</div>
+        <p>Forscher der US-Universität <strong>MIT</strong> haben Millionen Kurznachrichten untersucht (veröffentlicht 2018 in der Fachzeitschrift <em>Science</em>). Ihr Ergebnis: <strong>Falschmeldungen erreichten 1.500 Menschen rund sechsmal schneller als wahre Meldungen</strong> und wurden deutlich häufiger weiterverbreitet. Der Grund: Falschmeldungen wirken <strong>neuer, überraschender und emotionaler</strong> – und genau das teilen Menschen am liebsten. Übrigens: Es waren vor allem echte Menschen, die die Lügen verbreiteten, nicht Maschinen.</p>
+      </div>
+
+      <div class="lib-section">
+        <div class="lib-section-title">Filterblase und Echokammer</div>
+        <div class="lib-grid">
+          <div class="lib-card">
+            <div class="lib-card-sub">Effekt 1</div>
+            <div class="lib-card-title">Filterblase</div>
+            <div class="lib-card-body">Der Algorithmus zeigt dir <strong>mehr von dem, was du schon angeklickt hast</strong>. Wer einmal auf einen Panik-Post reagiert, bekommt ähnliche Inhalte nachgeliefert – die Welt in deinem Feed wird einseitig.</div>
+          </div>
+          <div class="lib-card">
+            <div class="lib-card-sub">Effekt 2</div>
+            <div class="lib-card-title">Echokammer</div>
+            <div class="lib-card-body">In deinem Umfeld <strong>bestätigen sich alle gegenseitig</strong> („Hab ich auch gehört!"). Gegenmeinungen tauchen kaum noch auf – und eine Behauptung wirkt wahr, nur weil alle sie wiederholen.</div>
+          </div>
+        </div>
+        <div class="chart-wrap">
+          <svg viewBox="0 0 560 270" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Schaubild: Links die Filterblase, in der der Algorithmus nur ähnliche Inhalte durchlässt; rechts die Echokammer, in der alle dieselbe Behauptung wiederholen">
+            <defs>
+              <marker id="arrB" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#962fbf"/></marker>
+            </defs>
+            <!-- Trennlinie -->
+            <line x1="280" y1="30" x2="280" y2="250" stroke="#dbdbdb" stroke-width="1.5" stroke-dasharray="4 4"/>
+
+            <!-- ===== Links: Filterblase ===== -->
+            <text x="140" y="26" text-anchor="middle" fill="#262626" font-family="Poppins,sans-serif" font-size="13" font-weight="700">Filterblase</text>
+            <!-- Blase -->
+            <circle cx="140" cy="140" r="72" fill="#f3eafa" stroke="#962fbf" stroke-width="2" stroke-dasharray="6 4"/>
+            <!-- Person -->
+            <circle cx="140" cy="128" r="14" fill="#962fbf"/>
+            <path d="M116 168 Q140 146 164 168 Z" fill="#962fbf"/>
+            <!-- Ähnliche Inhalte (gleiche Farbe) dringen ein -->
+            <rect x="20" y="70" width="18" height="18" rx="4" fill="#fa7e1e"/>
+            <line x1="42" y1="79" x2="78" y2="98" stroke="#962fbf" stroke-width="2" marker-end="url(#arrB)"/>
+            <rect x="14" y="132" width="18" height="18" rx="4" fill="#fa7e1e"/>
+            <line x1="36" y1="141" x2="66" y2="141" stroke="#962fbf" stroke-width="2" marker-end="url(#arrB)"/>
+            <rect x="20" y="194" width="18" height="18" rx="4" fill="#fa7e1e"/>
+            <line x1="42" y1="203" x2="78" y2="184" stroke="#962fbf" stroke-width="2" marker-end="url(#arrB)"/>
+            <!-- Andere Inhalte (andere Farben) prallen ab -->
+            <rect x="228" y="60" width="18" height="18" rx="4" fill="#4f5bd5"/>
+            <line x1="226" y1="78" x2="204" y2="96" stroke="#ed4956" stroke-width="2"/>
+            <path d="M200 92 l8 8 M208 92 l-8 8" stroke="#ed4956" stroke-width="2.2" stroke-linecap="round"/>
+            <rect x="240" y="132" width="18" height="18" rx="4" fill="#1f9e54"/>
+            <line x1="238" y1="141" x2="218" y2="141" stroke="#ed4956" stroke-width="2"/>
+            <path d="M212 137 l8 8 M220 137 l-8 8" stroke="#ed4956" stroke-width="2.2" stroke-linecap="round"/>
+            <rect x="228" y="200" width="18" height="18" rx="4" fill="#feda75"/>
+            <line x1="226" y1="204" x2="204" y2="186" stroke="#ed4956" stroke-width="2"/>
+            <path d="M200 182 l8 8 M208 182 l-8 8" stroke="#ed4956" stroke-width="2.2" stroke-linecap="round"/>
+            <text x="140" y="238" text-anchor="middle" fill="#4b4b4b" font-family="Inter,sans-serif" font-size="10.5">Der Algorithmus lässt nur durch,</text>
+            <text x="140" y="252" text-anchor="middle" fill="#4b4b4b" font-family="Inter,sans-serif" font-size="10.5">was dem Angeklickten ähnelt.</text>
+
+            <!-- ===== Rechts: Echokammer ===== -->
+            <text x="420" y="26" text-anchor="middle" fill="#262626" font-family="Poppins,sans-serif" font-size="13" font-weight="700">Echokammer</text>
+            <!-- Raum -->
+            <rect x="308" y="44" width="224" height="176" rx="14" fill="#fbe7f1" stroke="#d62976" stroke-width="2"/>
+            <!-- 4 Personen -->
+            <circle cx="350" cy="96" r="11" fill="#d62976"/><path d="M332 128 Q350 110 368 128 Z" fill="#d62976"/>
+            <circle cx="490" cy="96" r="11" fill="#d62976"/><path d="M472 128 Q490 110 508 128 Z" fill="#d62976"/>
+            <circle cx="350" cy="176" r="11" fill="#d62976"/><path d="M332 208 Q350 190 368 208 Z" fill="#d62976"/>
+            <circle cx="490" cy="176" r="11" fill="#d62976"/><path d="M472 208 Q490 190 508 208 Z" fill="#d62976"/>
+            <!-- zentrale Behauptung -->
+            <rect x="382" y="118" width="76" height="30" rx="8" fill="#ffffff" stroke="#d62976" stroke-width="1.5"/>
+            <text x="420" y="137" text-anchor="middle" fill="#d62976" font-family="Inter,sans-serif" font-size="10" font-weight="700">„Schule zu!"</text>
+            <!-- Echo-Sprechblasen -->
+            <text x="372" y="74" text-anchor="middle" fill="#4b4b4b" font-family="Inter,sans-serif" font-size="9">„Hab ich auch gehört!"</text>
+            <text x="468" y="74" text-anchor="middle" fill="#4b4b4b" font-family="Inter,sans-serif" font-size="9">„Stimmt, alle sagen das!"</text>
+            <text x="372" y="236" text-anchor="middle" fill="#4b4b4b" font-family="Inter,sans-serif" font-size="9">„Genau!"</text>
+            <text x="468" y="236" text-anchor="middle" fill="#4b4b4b" font-family="Inter,sans-serif" font-size="9">„Hab ich auch gelesen!"</text>
+            <!-- Pfeile von der Behauptung zu den Personen und zurück -->
+            <path d="M386 120 L360 108" fill="none" stroke="#d62976" stroke-width="1.5" opacity="0.7"/>
+            <path d="M454 120 L480 108" fill="none" stroke="#d62976" stroke-width="1.5" opacity="0.7"/>
+            <path d="M386 146 L360 164" fill="none" stroke="#d62976" stroke-width="1.5" opacity="0.7"/>
+            <path d="M454 146 L480 164" fill="none" stroke="#d62976" stroke-width="1.5" opacity="0.7"/>
+            <!-- Gegenmeinung bleibt draußen -->
+            <text x="420" y="252" text-anchor="middle" fill="#4b4b4b" font-family="Inter,sans-serif" font-size="10.5">Alle wiederholen dasselbe – Gegenmeinungen kommen nicht rein.</text>
+          </svg>
+          <div class="chart-caption">Eigene Darstellung · Filterblase (Technik sortiert vor) und Echokammer (Umfeld bestätigt sich)</div>
+        </div>
+      </div>
+
+      <div class="lib-section">
+        <div class="lib-section-title">Neu dazu: KI macht Fälschen kinderleicht</div>
+        <p>Mit KI-Bildgeneratoren lassen sich heute in Sekunden <strong>täuschend echte Fotos erfinden</strong>. Berühmtes Beispiel: 2023 hielten Millionen Menschen ein KI-Bild vom <strong>Papst in einer weißen Daunenjacke</strong> für ein echtes Foto. Merke: Auch ein „Foto" ist kein Beweis mehr – und ein „geheimes Dokument" auf einem Screenshot erst recht nicht.</p>
+      </div>
+
+      <div class="note-box">
+        <span class="note-label">Merksatz der Redaktion</span>
+        Der Algorithmus prüft nicht, ob etwas <strong>stimmt</strong> – er prüft nur, ob es <strong>funktioniert</strong>. Starke Gefühle = viel Interaktion = viel Reichweite. Genau deshalb konnte @lichtenberg.leaks in 47 Minuten die halbe Schule erreichen.
+      </div>`,
+    target:'Beweisstück 02' },
+
+  // --- B3 ---
+  { id:3, location:'Redaktions-Briefing 03', name:'Wem gehört die Nachricht? Der Fall NIUS',
+    intro:'Eure Recherche zeigt: Der „Beweis" von @lichtenberg.leaks stammt angeblich von einer Nachrichtenseite namens „kassel-klartext.info" – ohne Impressum, ohne Namen, ohne Adresse. Zeit für die wichtigste Redaktionsfrage überhaupt: Woran erkenne ich, ob ich einer Nachrichtenseite vertrauen kann?',
+    content:`
+      <div class="lib-section">
+        <div class="lib-section-title">Vier Fragen an jede Nachrichtenquelle</div>
+        <p>Profis stellen bei jeder Quelle dieselben vier Fragen: <strong>Wer schreibt hier? Wem gehört die Seite? Wer bezahlt sie? Wer kontrolliert sie?</strong> Was passiert, wenn man diese Fragen an eine echte, viel diskutierte Nachrichtenseite stellt, siehst du jetzt an einem realen Beispiel.</p>
+      </div>
+
+      <div class="lib-section">
+        <div class="lib-section-title">Das Beispiel: die Nachrichtenseite NIUS</div>
+        <div class="lib-grid">
+          <div class="lib-card">
+            <div class="lib-card-sub">Wer schreibt hier?</div>
+            <div class="lib-card-title">Chefredakteur: Julian Reichelt</div>
+            <div class="lib-card-body">NIUS wurde <strong>2023</strong> gegründet. Chefredakteur ist Julian Reichelt – er war vorher Chef der „Bild"-Zeitung und musste diesen Posten <strong>2021</strong> verlassen, nachdem Vorwürfe wegen seines Verhaltens gegenüber Mitarbeiterinnen bekannt geworden waren.</div>
+          </div>
+          <div class="lib-card">
+            <div class="lib-card-sub">Wem gehört sie? Wer bezahlt?</div>
+            <div class="lib-card-title">Geldgeber: Frank Gotthardt</div>
+            <div class="lib-card-body">Hinter NIUS steht der Unternehmer <strong>Frank Gotthardt</strong> (Gründer einer großen Software-Firma für Arztpraxen). Er trat zugleich als <strong>Großspender der CDU</strong> auf. Deshalb wird diskutiert: Wie unabhängig kann ein Medium von seinem Geldgeber und dessen politischen Zielen sein?</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="lib-section">
+        <div class="lib-section-title">Zwei Sichtweisen auf NIUS</div>
+        <div class="persp-grid">
+          <div class="persp-card">
+            <div class="pc-tag">Selbstverständnis von NIUS</div>
+            <h4>„Stimme der Mehrheit"</h4>
+            <ul>
+              <li>NIUS beschreibt sich selbst als <strong>„Stimme der Mehrheit"</strong>, die Themen anspricht, die andere Medien angeblich verschweigen.</li>
+              <li>Reichelt <strong>weist den Vorwurf zurück</strong>, NIUS sei rechtspopulistisch, und sagt, die Seite mache Journalismus – nur eben „populär und emotional".</li>
+            </ul>
+          </div>
+          <div class="persp-card crit">
+            <div class="pc-tag">Kritik an NIUS</div>
+            <h4>Reißerisch und teils nachweislich falsch</h4>
+            <ul>
+              <li>Kritiker werfen NIUS <strong>reißerische Aufmachung</strong> und <strong>irreführende Meldungen</strong> vor, die vor allem Empörung erzeugen sollen.</li>
+              <li>Dokumentiert sind <strong>erfundene Zitate</strong> – unter anderem eine angebliche Entschuldigung des ukrainischen Präsidenten Selenskyj, die es nie gab. Reichelt erklärte das später mit Experimenten mit <strong>Künstlicher Intelligenz</strong>.</li>
+              <li>Politikwissenschaftler <strong>warnen Politiker davor</strong>, dort aufzutreten – trotzdem geben Politiker verschiedener Parteien der Seite Interviews.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="lib-section">
+        <div class="lib-section-title">Wer kontrolliert eigentlich Medien in Deutschland?</div>
+        <div class="lib-grid">
+          <div class="lib-card">
+            <div class="lib-card-sub">Weg 1 · freiwillig</div>
+            <div class="lib-card-title">Der Deutsche Presserat</div>
+            <div class="lib-card-body">Die <strong>freiwillige Selbstkontrolle</strong> der Presse. Zeitungen und Portale, die mitmachen, verpflichten sich auf den <strong>Pressekodex</strong> (z. B. Wahrheitspflicht, Sorgfalt). Bei Verstößen kann der Presserat öffentliche <strong>Rügen</strong> aussprechen. <strong>Aber: NIUS macht dabei nicht mit</strong> – deshalb kann der Presserat NIUS gar nicht rügen.</div>
+          </div>
+          <div class="lib-card">
+            <div class="lib-card-sub">Weg 2 · Aufsicht</div>
+            <div class="lib-card-title">Die Landesmedienanstalt</div>
+            <div class="lib-card-body">Für Online-Medien wie NIUS ist eine <strong>staatsferne Aufsichtsbehörde</strong> zuständig: die <strong>Medienanstalt Berlin-Brandenburg</strong>. Sie prüft nach mehreren Beschwerden, ob NIUS gegen die <strong>journalistische Sorgfaltspflicht</strong> verstößt, und hat die Seite bereits <strong>beanstandet</strong>. NIUS wehrt sich dagegen vor Gericht.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="note-box">
+        <span class="note-label">Merksatz der Redaktion</span>
+        Prüfe bei jeder Nachrichtenseite: <strong>Wer schreibt? Wem gehört sie? Wer bezahlt? Wer kontrolliert?</strong> Ob du ein Medium am Ende gut findest, entscheidest du selbst – diese vier Fragen gelten für <strong>jede</strong> Quelle, egal welcher politischen Richtung. Und eine Seite ganz ohne Impressum wie „kassel-klartext.info"? Fällt schon bei Frage 1 durch.
+      </div>`,
+    target:'Beweisstück 03', video:'Q7dXrY3xU-k' },
+
+  // --- B4 ---
+  { id:4, location:'Redaktions-Briefing 04', name:'Die Spur ins Ausland: „Doppelgänger"',
+    intro:'Nächster Fund der Redaktion: Der „Beweis-Screenshot" von @lichtenberg.leaks sieht aus wie eine bekannte Nachrichtenseite – aber die Internetadresse endet falsch. Genau dieser Trick wird in Wirklichkeit im ganz großen Stil eingesetzt: von einer Kampagne, die aus Russland gesteuert wird.',
+    content:`
+      <div class="lib-section">
+        <div class="lib-section-title">Der Trick: Kopierte Nachrichtenseiten</div>
+        <p>Seit <strong>2022</strong> baut ein aus <strong>Russland</strong> gesteuertes Netzwerk täuschend echte <strong>Kopien bekannter Nachrichtenseiten</strong> – Fachleute nennen das die <strong>„Doppelgänger"-Kampagne</strong>. Die Fälschungen sehen aus wie das Original: gleiches Logo, gleiche Schrift, gleicher Aufbau. Nur die Adresse verrät sie – und der Inhalt ist erfunden.</p>
+        <div class="chart-wrap">
+          <svg viewBox="0 0 520 210" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Vergleich einer echten und einer gefälschten Internetadresse">
+            <text x="260" y="24" text-anchor="middle" fill="#262626" font-family="Poppins,sans-serif" font-size="13" font-weight="700">Die Adresszeile verrät die Fälschung</text>
+            <!-- echte Adresse -->
+            <rect x="30" y="46" width="460" height="46" rx="12" fill="#ffffff" stroke="#1f9e54" stroke-width="2"/>
+            <circle cx="58" cy="69" r="9" fill="#e8f6ee" stroke="#1f9e54" stroke-width="1.5"/>
+            <path d="M53.5 69 l3.2 3.2 l6-6.5" fill="none" stroke="#1f9e54" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <text x="80" y="75" fill="#262626" font-family="IBM Plex Mono,monospace" font-size="15" font-weight="600">https://www.spiegel.de</text>
+            <text x="482" y="75" text-anchor="end" fill="#1f9e54" font-family="Inter,sans-serif" font-size="11" font-weight="700">ECHT</text>
+            <!-- gefälschte Adresse -->
+            <rect x="30" y="110" width="460" height="46" rx="12" fill="#ffffff" stroke="#ed4956" stroke-width="2"/>
+            <circle cx="58" cy="133" r="9" fill="#fdeceb" stroke="#ed4956" stroke-width="1.5"/>
+            <path d="M54 129 l8 8 M62 129 l-8 8" fill="none" stroke="#ed4956" stroke-width="2" stroke-linecap="round"/>
+            <text x="80" y="139" fill="#262626" font-family="IBM Plex Mono,monospace" font-size="15" font-weight="600">https://www.spiegel.</text>
+            <text x="262" y="139" fill="#ed4956" font-family="IBM Plex Mono,monospace" font-size="15" font-weight="700">ltd</text>
+            <text x="482" y="139" text-anchor="end" fill="#ed4956" font-family="Inter,sans-serif" font-size="11" font-weight="700">FÄLSCHUNG</text>
+            <!-- Lupe -->
+            <circle cx="278" cy="134" r="17" fill="none" stroke="#fa7e1e" stroke-width="2.5"/>
+            <line x1="290" y1="146" x2="302" y2="158" stroke="#fa7e1e" stroke-width="3" stroke-linecap="round"/>
+            <text x="260" y="186" text-anchor="middle" fill="#8e8e8e" font-family="Inter,sans-serif" font-size="10.5">Nur die Endung ist anders: .ltd statt .de – Inhalt komplett erfunden. Genauso: faz.ltd statt faz.net.</text>
+          </svg>
+          <div class="chart-caption">Eigene Darstellung nach dokumentierten Fällen (u. a. Auswärtiges Amt, BSI, Recherchezentrum CORRECTIV)</div>
+        </div>
+      </div>
+
+      <div class="lib-section">
+        <div class="lib-section-title">So werden die Fälschungen verbreitet</div>
+        <p>Die Links zu den gefälschten Artikeln verbreiten sich nicht von allein. Dahinter stehen <strong>hunderttausende gefälschte Konten</strong> in sozialen Netzwerken, <strong>Social Bots</strong> (automatische Programme, die wie echte Nutzer posten, liken und kommentieren) und sogar <strong>bezahlte Werbeanzeigen</strong>. So wirkt es, als würden „ganz viele normale Leute" über ein Thema reden – in Wahrheit ist es eine Maschinerie.</p>
+      </div>
+
+      <div class="lib-section">
+        <div class="lib-section-title">Das Ziel: Deutschland spalten</div>
+        <p>Deutsche Sicherheitsbehörden wie der <strong>Verfassungsschutz</strong> und das <strong>BSI</strong> (Bundesamt für Sicherheit in der Informationstechnik) haben die Kampagne untersucht. Die Ziele:</p>
+        <ul class="lib-bullets">
+          <li><strong>Ängste verstärken</strong> – in internen Unterlagen der beteiligten russischen Agentur steht ausdrücklich das Ziel, die <strong>„Zukunftsangst"</strong> der Deutschen zu erhöhen.</li>
+          <li>Die Gesellschaft <strong>spalten</strong> – Menschen sollen sich gegenseitig misstrauen und über alles streiten.</li>
+          <li>Die <strong>Unterstützung für die Ukraine schwächen</strong>, die Russland angegriffen hat.</li>
+          <li><strong>Wahlen beeinflussen</strong> – also mitbestimmen, wie Menschen in Deutschland denken und abstimmen.</li>
+        </ul>
+      </div>
+
+      <div class="lib-section">
+        <div class="lib-section-title">Das Ausmaß in Zahlen</div>
+        <div class="lib-grid">
+          <div class="lib-card">
+            <div class="lib-card-sub">Gezählt vom Auswärtigen Amt</div>
+            <div class="lib-card-title">Über 12.900 Fake-Artikel</div>
+            <div class="lib-card-body">So viele <strong>deutschsprachige</strong> Falschartikel zählte das Auswärtige Amt in gut einem Jahr – im Durchschnitt <strong>einer alle 50 Minuten</strong>.</div>
+          </div>
+          <div class="lib-card">
+            <div class="lib-card-sub">Reaktion der Behörden</div>
+            <div class="lib-card-title">32 Adressen beschlagnahmt</div>
+            <div class="lib-card-body"><strong>2024</strong> ließ die US-Justiz 32 Internetadressen der Kampagne <strong>beschlagnahmen</strong> – darunter mehrere, die gezielt auf Deutschland ausgerichtet waren.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="note-box">
+        <span class="note-label">Merksatz der Redaktion</span>
+        Nicht jede Falschmeldung kommt von gelangweilten Einzelpersonen – manche sind <strong>gezielte Angriffe fremder Staaten</strong> auf unsere Demokratie. Dein bester Schutz: <strong>Adresszeile genau lesen</strong> (besonders die Endung!) und im Zweifel die offizielle Adresse selbst eintippen, statt einem Link zu folgen.
+      </div>`,
+    target:'Beweisstück 04' },
+
+  // --- B5 ---
+  { id:5, location:'Redaktions-Briefing 05', name:'Der 5-Schritte-Check der Redaktion',
+    intro:'Alle Spuren liegen auf dem Tisch. Jetzt fehlt nur noch das Handwerkszeug, mit dem ihr den Fall wasserdicht macht – und mit dem du künftig JEDE verdächtige Meldung selbst entlarven kannst.',
+    content:`
+      <div class="lib-section">
+        <div class="lib-section-title">Der 5-Schritte-Check</div>
+        <div class="lib-grid">
+          <div class="lib-card">
+            <div class="lib-card-sub">Schritt 1</div>
+            <div class="lib-card-title">Quelle &amp; Impressum prüfen</div>
+            <div class="lib-card-body">Wer schreibt hier? Seriöse Seiten haben in Deutschland ein <strong>Impressum</strong> mit Namen und Adresse – das ist <strong>Pflicht</strong>. Fehlt es, ist das ein Alarmsignal.</div>
+          </div>
+          <div class="lib-card">
+            <div class="lib-card-sub">Schritt 2</div>
+            <div class="lib-card-title">Adresszeile exakt lesen</div>
+            <div class="lib-card-body">Fälschungen verraten sich oft nur durch eine <strong>andere Endung</strong> (.ltd statt .de) oder kleine Zusätze („tagesschau-aktuell"). Im Zweifel: offizielle Adresse selbst eintippen.</div>
+          </div>
+          <div class="lib-card">
+            <div class="lib-card-sub">Schritt 3</div>
+            <div class="lib-card-title">Datum prüfen</div>
+            <div class="lib-card-body">Viele „Aufreger" sind in Wahrheit <strong>alte Meldungen</strong>, die längst überholt sind – aber als neu geteilt werden.</div>
+          </div>
+          <div class="lib-card">
+            <div class="lib-card-sub">Schritt 4</div>
+            <div class="lib-card-title">Bild-Rückwärtssuche</div>
+            <div class="lib-card-body">Lade ein Foto in eine <strong>Bilder-Rückwärtssuche</strong> (z. B. Google Bilder oder TinEye) hoch – so findest du heraus, <strong>woher es wirklich stammt</strong> und ob es in einem ganz anderen Zusammenhang entstanden ist.</div>
+          </div>
+          <div class="lib-card">
+            <div class="lib-card-sub">Schritt 5</div>
+            <div class="lib-card-title">Quervergleich &amp; Faktenchecker</div>
+            <div class="lib-card-body">Berichten <strong>seriöse Medien</strong> dasselbe? Gibt es schon einen <strong>Faktencheck</strong> – z. B. von <strong>Correctiv</strong>, der <strong>dpa</strong> oder dem <strong>ARD-Faktenfinder</strong>? Wenn eine „Riesen-Nachricht" nirgendwo sonst auftaucht: Finger weg.</div>
+          </div>
+          <div class="lib-card" style="background:var(--error-bg); border-color:rgba(237,73,86,0.3);">
+            <div class="lib-card-sub" style="color:var(--error);">Achtung</div>
+            <div class="lib-card-title">Was KEIN Beweis ist</div>
+            <div class="lib-card-body"><strong>Viele Likes</strong>, viele Kommentare oder „das haben schon ganz viele geteilt" sagen <strong>nichts</strong> über den Wahrheitsgehalt aus. Beliebt ist nicht gleich wahr.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="lib-section">
+        <div class="lib-section-title">Der Check als Ablauf – Schritt für Schritt</div>
+        <div class="chart-wrap">
+          <svg viewBox="0 0 580 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Zeitstrahl mit den fünf Prüfschritten in der richtigen Reihenfolge: Quelle und Impressum, Adresszeile, Datum, Bild-Rückwärtssuche, Quervergleich">
+            <defs>
+              <marker id="arrT" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#8e8e8e"/></marker>
+            </defs>
+            <text x="290" y="24" text-anchor="middle" fill="#262626" font-family="Poppins,sans-serif" font-size="13" font-weight="700">Der 5-Schritte-Check – in dieser Reihenfolge</text>
+            <!-- Start / Ziel -->
+            <text x="22" y="98" text-anchor="middle" fill="#8e8e8e" font-family="IBM Plex Mono,monospace" font-size="9" letter-spacing="1">START</text>
+            <text x="558" y="98" text-anchor="middle" fill="#8e8e8e" font-family="IBM Plex Mono,monospace" font-size="9" letter-spacing="1">TEILEN?</text>
+            <!-- Grundlinie -->
+            <line x1="36" y1="110" x2="544" y2="110" stroke="#dbdbdb" stroke-width="3" stroke-linecap="round"/>
+            <!-- Pfeile zwischen den Stationen -->
+            <line x1="92" y1="110" x2="118" y2="110" stroke="#8e8e8e" stroke-width="2" marker-end="url(#arrT)"/>
+            <line x1="206" y1="110" x2="232" y2="110" stroke="#8e8e8e" stroke-width="2" marker-end="url(#arrT)"/>
+            <line x1="320" y1="110" x2="346" y2="110" stroke="#8e8e8e" stroke-width="2" marker-end="url(#arrT)"/>
+            <line x1="434" y1="110" x2="460" y2="110" stroke="#8e8e8e" stroke-width="2" marker-end="url(#arrT)"/>
+            <!-- Station 1 -->
+            <circle cx="66" cy="110" r="24" fill="#feda75"/>
+            <text x="66" y="116" text-anchor="middle" fill="#262626" font-family="Poppins,sans-serif" font-size="15" font-weight="700">1</text>
+            <text x="66" y="154" text-anchor="middle" fill="#262626" font-family="Inter,sans-serif" font-size="10.5" font-weight="700">Quelle &amp;</text>
+            <text x="66" y="168" text-anchor="middle" fill="#262626" font-family="Inter,sans-serif" font-size="10.5" font-weight="700">Impressum</text>
+            <text x="66" y="184" text-anchor="middle" fill="#8e8e8e" font-family="Inter,sans-serif" font-size="9">Wer steht dafür ein?</text>
+            <!-- Station 2 -->
+            <circle cx="180" cy="110" r="24" fill="#fa7e1e"/>
+            <text x="180" y="116" text-anchor="middle" fill="#ffffff" font-family="Poppins,sans-serif" font-size="15" font-weight="700">2</text>
+            <text x="180" y="154" text-anchor="middle" fill="#262626" font-family="Inter,sans-serif" font-size="10.5" font-weight="700">Adresszeile</text>
+            <text x="180" y="168" text-anchor="middle" fill="#262626" font-family="Inter,sans-serif" font-size="10.5" font-weight="700">exakt lesen</text>
+            <text x="180" y="184" text-anchor="middle" fill="#8e8e8e" font-family="Inter,sans-serif" font-size="9">.de oder .ltd?</text>
+            <!-- Station 3 -->
+            <circle cx="294" cy="110" r="24" fill="#d62976"/>
+            <text x="294" y="116" text-anchor="middle" fill="#ffffff" font-family="Poppins,sans-serif" font-size="15" font-weight="700">3</text>
+            <text x="294" y="154" text-anchor="middle" fill="#262626" font-family="Inter,sans-serif" font-size="10.5" font-weight="700">Datum</text>
+            <text x="294" y="168" text-anchor="middle" fill="#262626" font-family="Inter,sans-serif" font-size="10.5" font-weight="700">prüfen</text>
+            <text x="294" y="184" text-anchor="middle" fill="#8e8e8e" font-family="Inter,sans-serif" font-size="9">Aktuell oder uralt?</text>
+            <!-- Station 4 -->
+            <circle cx="408" cy="110" r="24" fill="#962fbf"/>
+            <text x="408" y="116" text-anchor="middle" fill="#ffffff" font-family="Poppins,sans-serif" font-size="15" font-weight="700">4</text>
+            <text x="408" y="154" text-anchor="middle" fill="#262626" font-family="Inter,sans-serif" font-size="10.5" font-weight="700">Bild-Rück-</text>
+            <text x="408" y="168" text-anchor="middle" fill="#262626" font-family="Inter,sans-serif" font-size="10.5" font-weight="700">wärtssuche</text>
+            <text x="408" y="184" text-anchor="middle" fill="#8e8e8e" font-family="Inter,sans-serif" font-size="9">Woher stammt das Foto?</text>
+            <!-- Station 5 -->
+            <circle cx="522" cy="110" r="24" fill="#4f5bd5"/>
+            <text x="522" y="116" text-anchor="middle" fill="#ffffff" font-family="Poppins,sans-serif" font-size="15" font-weight="700">5</text>
+            <text x="522" y="154" text-anchor="middle" fill="#262626" font-family="Inter,sans-serif" font-size="10.5" font-weight="700">Quervergleich &amp;</text>
+            <text x="522" y="168" text-anchor="middle" fill="#262626" font-family="Inter,sans-serif" font-size="10.5" font-weight="700">Faktenchecker</text>
+            <text x="522" y="184" text-anchor="middle" fill="#8e8e8e" font-family="Inter,sans-serif" font-size="9">Berichten andere das?</text>
+            <!-- Fußzeile -->
+            <text x="290" y="216" text-anchor="middle" fill="#d62976" font-family="IBM Plex Mono,monospace" font-size="10" letter-spacing="2">ERST CHECKEN · DANN TEILEN</text>
+          </svg>
+          <div class="chart-caption">Eigene Darstellung · Die Schritte bauen aufeinander auf: Bei einem Alarmsignal kannst du schon früh abbrechen.</div>
+        </div>
+      </div>
+
+      <div class="lib-section">
+        <div class="lib-section-title">Der Check, angewendet auf @lichtenberg.leaks</div>
+        <p>Eure Redaktion hat alle fünf Schritte durchgezogen. Die Ergebnisse:</p>
+        <ul class="lib-bullets">
+          <li><strong>Quelle:</strong> „kassel-klartext.info" hat <strong>kein Impressum</strong> – niemand übernimmt Verantwortung.</li>
+          <li><strong>Adresse:</strong> Die Seite ahmt den Look einer echten Nachrichtenseite nach, die Adresse passt aber nicht zum Original.</li>
+          <li><strong>Bild:</strong> Die Rückwärtssuche zeigt – das Foto des „Geheimdokuments" stammt aus einem <strong>drei Jahre alten Artikel über eine ganz andere Stadt</strong>.</li>
+          <li><strong>Quervergleich:</strong> <strong>Kein einziges seriöses Medium</strong> berichtet über eine Schließung – und auf Nachfrage <strong>dementieren</strong> Schulleitung und Staatliches Schulamt offiziell.</li>
+        </ul>
+        <p>Damit ist das Dossier fast fertig. Fehlt nur noch dein finaler Check im letzten Beweisstück – dort klärt sich auch, <strong>warum</strong> jemand so einen Fake überhaupt in die Welt setzt.</p>
+      </div>
+
+      <div class="note-box">
+        <span class="note-label">Merksatz der Redaktion</span>
+        Erst <strong>checken</strong>, dann teilen. Wer die fünf Schritte kennt, ist schneller als jede Falschmeldung.
+      </div>`,
+    target:'Beweisstück 05' },
+];
+
+function renderLibrary(idx){
+  const lib=LIBRARIES[idx];
+  if(lib.video){ renderLibraryVideo(idx); return; }
+  renderLibraryText(idx);
+}
+
+/* Video-Variante eines Briefings (Erklärfilm + drei Optionen) */
+function renderLibraryVideo(idx){
+  state.screen='lib'+(idx+1); renderSeals();
+  window.scrollTo({top:0,behavior:'instant'});
+  const lib=LIBRARIES[idx];
+  const vid=lib.video;
+  root.innerHTML=`
+    ${libraryBanner()}
+    <div class="room-header">
+      <div class="room-number">B${idx+1}</div>
+      <div class="room-meta"><div class="room-location">${lib.location}</div><div class="room-name">${lib.name}</div></div>
+    </div>
+    <p class="lede" style="margin-bottom:18px;">${lib.intro}</p>
+    <div class="card">
+      <p class="text-mute" style="font-size:14px; margin-bottom:12px;">Dieses Briefing gibt es als <strong>Erklärfilm</strong>. Schau ihn dir in Ruhe an – alles, was du für das Beweisstück brauchst, kommt darin vor. Wenn du lieber liest, kannst du unten zur Textversion wechseln.</p>
+      <div class="video-wrap">
+        <iframe src="https://www.youtube.com/embed/${vid}?rel=0" title="Erklärfilm: ${lib.name}" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
+      </div>
+      ${libraryWarningBar()}
+      <div class="btn-row">
+        <a class="btn btn-ghost" href="https://www.youtube.com/watch?v=${vid}" target="_blank" rel="noopener noreferrer">Video auf YouTube öffnen</a>
+        <button class="btn btn-ghost" onclick="showLibraryText(${idx})">Anstelle des Videos lieber mit einem Text arbeiten</button>
+        <button class="btn btn-primary btn-arrow" onclick="goRoom(${idx+1})">Zum Rätselraum</button>
+      </div>
+    </div>
+  `;
+}
+window.showLibraryText=(idx)=>{ renderLibraryText(idx); };
+
+/* Text-Variante eines Briefings */
+function renderLibraryText(idx){
+  state.screen='lib'+(idx+1); renderSeals();
+  window.scrollTo({top:0,behavior:'instant'});
+  const lib=LIBRARIES[idx];
+  root.innerHTML=`
+    ${libraryBanner()}
+    <div class="room-header">
+      <div class="room-number">B${idx+1}</div>
+      <div class="room-meta"><div class="room-location">${lib.location}</div><div class="room-name">${lib.name}</div></div>
+    </div>
+    <p class="lede" style="margin-bottom:24px;">${lib.intro}</p>
+    ${lib.content}
+    ${libraryWarningBar()}
+    <div class="btn-row"><button class="btn btn-primary btn-arrow" onclick="goRoom(${idx+1})">Zum ${lib.target}</button></div>
+  `;
+}
+
+function libraryBanner(){
+  return `
+    <div class="library-banner">
+      <svg viewBox="0 0 24 24" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2z"/><path d="M9 9h1M9 13h6M9 17h6"/></svg>
+      <div>Dies ist ein <strong>Redaktions-Briefing</strong>. Hier findest du das Wissen für das nächste Beweisstück.
+        <span class="warn">⚠ Sobald du das Beweisstück startest, kommst du nicht mehr hierher zurück. Lies in Ruhe.</span>
+      </div>
+    </div>`;
+}
+function libraryWarningBar(){
+  return `
+    <div class="lib-warning-bar">
+      <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      <div>Hast du alles gelesen? <strong>Ab dem Beweisstück gibt es keinen Weg zurück.</strong></div>
+    </div>`;
+}
+window.goLibrary=(n)=>{ renderLibrary(n-1); };
+
+/* ============================================================
+   ROOM DATA
+   ============================================================ */
+const ROOMS=[
+  { id:1, location:'Beweisstück 01', name:'Fake, Fehler, Witz oder Meinung?',
+    briefing:'Erster Schritt fürs Dossier: Ihr beweist, dass die Redaktion die Begriffe beherrscht – und ordnet acht echte Fundstücke aus dem Netz richtig ein.',
+    task:'<strong>Teil 1:</strong> Ordne jedes Fundstück als <strong>Desinformation</strong>, <strong>Falschinformation</strong>, <strong>Satire</strong> oder <strong>Meinung</strong> ein. <strong>Teil 2:</strong> Vervollständige danach den Eintrag fürs Dossier – tippe die fehlenden Begriffe selbst ein.' },
+  { id:2, location:'Beweisstück 02', name:'Warum explodiert so etwas?',
+    briefing:'2.847 Likes in 47 Minuten sind kein Zufall. Fürs Dossier erklärt ihr, welche Mechanik dahintersteckt.',
+    task:'<strong>Teil 1:</strong> Beantworte die drei Fragen. <strong>Teil 2:</strong> Ordne danach jedem Begriff die passende Beschreibung zu. Achtung: Zwei Beschreibungen sind erfunden und passen zu keinem Begriff.' },
+  { id:3, location:'Beweisstück 03', name:'Wem gehört die Nachricht?',
+    briefing:'Die „Quelle" des Fakes hat kein Impressum. Ihr zeigt im Dossier, wie man seriöse von unseriösen Quellen unterscheidet – am realen Beispiel NIUS.',
+    task:'<strong>Teil 1:</strong> Ordne jedem Akteur seine Rolle zu. Zwei Beschreibungen sind erfunden. <strong>Teil 2:</strong> Beantworte die drei Faktenfragen.' },
+  { id:4, location:'Beweisstück 04', name:'Die Spur ins Ausland',
+    briefing:'Der „Beweis-Screenshot" nutzt denselben Trick wie die echte „Doppelgänger"-Kampagne. Ihr entlarvt die Methode – Adresse für Adresse.',
+    task:'<strong>Teil 1:</strong> Prüfe jede Internetadresse – echt oder Fälschung? <strong>Teil 2:</strong> Vervollständige den Ermittlungsbericht – tippe die fehlenden Begriffe selbst ein.' },
+  { id:5, location:'Beweisstück 05', name:'Der finale Faktencheck',
+    briefing:'Letztes Beweisstück. Ihr wendet den 5-Schritte-Check auf den Fall an, stellt das Dossier zusammen – und Ayla tippt die Schlagzeile.',
+    task:'<strong>Teil 1:</strong> Ordne jedem Prüfschritt zu, was er im Fall ergeben hat. Zwei Angaben gehören zu keinem Prüfschritt. <strong>Teil 2:</strong> Wähle <strong>alle</strong> Punkte aus, die ins Dossier gehören. <strong>Teil 3:</strong> Vervollständige die Schlagzeile.' },
+];
+
+/* ---------- Room 1: Klassifikation in 4 Kategorien + freier Lückentext ---------- */
+const PUZZLE_R1=[
+  {id:'r1a', text:'„🚨 Ab Montag HANDYVERBOT an allen Schulen in Deutschland! Ein Insider hat es uns verraten. TEILEN!!!" (frei erfunden, ohne jeden Beleg gepostet)', correct:'desinfo'},
+  {id:'r1b', text:'Deine Oma teilt einen fünf Jahre alten Artikel über einen Bahnhofs-Abriss – der längst abgesagt wurde – und schreibt: „Habt ihr das gesehen??"', correct:'falschinfo'},
+  {id:'r1c', text:'„Studie: 87 % der Schüler halten Ferien für zu kurz, Lehrer für zu lang anwesend." (Der Postillon)', correct:'satire'},
+  {id:'r1d', text:'„Also ich finde, der neue Stundenplan ist total unfair."', correct:'meinung'},
+  {id:'r1e', text:'„BREAKING: Bekannter Musiker tot!" – dazu ein Trauer-Screenshot, den der Ersteller selbst zusammengebastelt hat, um Klicks zu bekommen', correct:'desinfo'},
+  {id:'r1f', text:'Ein Mitschüler postet: „Morgen fällt die 6. Stunde aus!" – er hat den Vertretungsplan falsch gelesen.', correct:'falschinfo'},
+  {id:'r1g', text:'„Regierung beschließt: Montage werden ersatzlos abgeschafft." (heute-show)', correct:'satire'},
+  {id:'r1h', text:'„Pizza ist das beste Mensa-Essen überhaupt."', correct:'meinung'},
+];
+const R1_LABEL={desinfo:'Desinformation',falschinfo:'Falschinformation',satire:'Satire',meinung:'Meinung'};
+const R1_BLANKS=[
+  {id:0, accept:['desinformation'], solution:'Desinformation', label:'Lücke 1 (absichtlich falsche Information)',
+   hints:['Der Fachbegriff für das, was die meisten „Fake News" nennen – mit Täuschungsabsicht.','Das Wort beginnt mit „Des…" und endet auf „…information".','Des_ _ _ormation – 14 Buchstaben.']},
+  {id:1, accept:['falschinformation','fehlinformation','misinformation'], solution:'Falschinformation', label:'Lücke 2 (versehentlich weitergegebene falsche Information)',
+   hints:['Das Gegenstück zur Desinformation – ohne böse Absicht, zum Beispiel wenn Oma etwas Altes teilt.','Das Wort beginnt mit „Falsch…".','Falsch_ _ _ _ _ _ _ _ _ _ _ – 17 Buchstaben.']},
+  {id:2, accept:['satire'], solution:'Satire', label:'Lücke 3 (bewusst übertrieben, will unterhalten)',
+   hints:['Denk an den Postillon oder die heute-show.','Ein Wort mit 6 Buchstaben, beginnt mit S.','S_t_r_']},
+  {id:3, accept:['absicht','täuschungsabsicht'], solution:'Absicht', label:'Lücke 4 (die Schlüsselfrage dahinter)',
+   hints:['Die Schlüsselfrage lautet: Will mich jemand täuschen – oder war es ein Versehen? Wonach fragt man da?','Das Wort steckt in „absichtlich".','A_s_c_t']},
+];
+let r1Choice={}; let r1Submitted=false; let r1Order=[]; let r1Fails=0;
+function r1Input(i){ return `<input type="text" class="cloze-input" id="r1blank-${i}" maxlength="30" autocomplete="off" spellcheck="false">`; }
+function renderRoom1(){
+  state.screen='room1'; renderSeals(); window.scrollTo({top:0,behavior:'instant'});
+  r1Choice={}; r1Submitted=false; r1Fails=0;
+  r1Order=shuffle(PUZZLE_R1);
+  const room=ROOMS[0];
+  const rows=r1Order.map(it=>`
+    <div class="classify-row" id="r1row-${it.id}">
+      <div class="classify-text">${it.text}</div>
+      <div class="classify-btns">
+        <button class="classify-btn" id="r1-${it.id}-desinfo" onclick="pickR1('${it.id}','desinfo')">Desinformation</button>
+        <button class="classify-btn" id="r1-${it.id}-falschinfo" onclick="pickR1('${it.id}','falschinfo')">Falschinformation</button>
+        <button class="classify-btn" id="r1-${it.id}-satire" onclick="pickR1('${it.id}','satire')">Satire</button>
+        <button class="classify-btn" id="r1-${it.id}-meinung" onclick="pickR1('${it.id}','meinung')">Meinung</button>
+      </div>
+    </div>`).join('');
+  const cloze=`
+    <div class="card"><p class="cloze">
+      Eintrag fürs Dossier: Entscheidend ist bei jeder Meldung die ${r1Input(3)}, die dahintersteckt.
+      ${r1Input(2)} ist bewusst übertrieben und will unterhalten statt täuschen.
+      Eine ${r1Input(1)} ist zwar falsch, wird aber <strong>versehentlich</strong> weitergegeben.
+      Eine ${r1Input(0)} dagegen ist <strong>absichtlich</strong> falsch – jemand will damit täuschen.
+    </p>
+    <div id="r1help" class="cloze-help"></div></div>`;
+  root.innerHTML=`${roomHeader(room)}
+    <p class="body-lg" style="margin-bottom:4px;"><strong>Teil 1:</strong> Ordne jedes Fundstück der richtigen Kategorie zu.</p>
+    <div class="card">${rows}</div>
+    <p class="body-lg" style="margin:18px 0 4px;"><strong>Teil 2:</strong> Vervollständige den Dossier-Eintrag (selbst eintippen).</p>
+    ${cloze}
+    ${roomFooter('Teil 1: Frag dich bei jedem Fundstück – steckt Täuschungsabsicht dahinter, ein Versehen, ein Witz oder gar keine Tatsachenbehauptung? Teil 2: Es sind genau die vier Begriffe aus dem Briefing – einer davon ist die Schlüsselfrage.','checkR1()')}`;
+}
+window.pickR1=(id,val)=>{
+  if(r1Submitted) return;
+  r1Choice[id]=val;
+  ['desinfo','falschinfo','satire','meinung'].forEach(v=>{
+    document.getElementById(`r1-${id}-${v}`).classList.toggle('active',v===val);
+  });
+};
+window.checkR1=()=>{
+  if(Object.keys(r1Choice).length<PUZZLE_R1.length){ showStatus('warning','Noch unvollständig','Bitte ordne jedes Fundstück zu.'); return; }
+  let allCorrect=true; const errors=[];
+  PUZZLE_R1.forEach(it=>{
+    const row=document.getElementById('r1row-'+it.id); row.classList.remove('correct','incorrect');
+    if(r1Choice[it.id]===it.correct) row.classList.add('correct');
+    else{ row.classList.add('incorrect'); allCorrect=false;
+      errors.push({kind:'falsch_einsortiert', item:it.text, wrongAnswer:R1_LABEL[r1Choice[it.id]], correctAnswer:R1_LABEL[it.correct]}); }
+  });
+  const wrongBlanks1=[];
+  R1_BLANKS.forEach(b=>{
+    const inp=document.getElementById('r1blank-'+b.id); const val=inp.value;
+    inp.classList.remove('ok','bad');
+    if(b.accept.includes(normalizeAnswer(val))){ inp.classList.add('ok'); }
+    else{ inp.classList.add('bad'); allCorrect=false; wrongBlanks1.push(b.id);
+      errors.push({kind:'luecke_falsch', item:b.label, wrongAnswer:val.trim()||'(leer)', correctAnswer:b.solution}); }
+  });
+  if(wrongBlanks1.length) r1Fails++;
+  renderClozeHelp('r1help', R1_BLANKS, wrongBlanks1, r1Fails);
+  recordAttempt(0,{errors});
+  if(allCorrect){ r1Submitted=true; showStatus('success','Richtig','Beweisstück gesichert. Die Redaktion kennt jetzt den Unterschied – und der Post von @lichtenberg.leaks trägt alle Merkmale einer Desinformation.'); setTimeout(()=>triggerReveal(0),800); }
+  else{ showStatus('warning','Noch nicht ganz','Die rot markierten Stellen stimmen noch nicht. Schau noch mal hin und korrigiere.'); setTimeout(()=>{ PUZZLE_R1.forEach(it=>document.getElementById('r1row-'+it.id).classList.remove('correct','incorrect')); },4500); }
+};
+
+/* ---------- Room 2: Multiple Choice + Zuordnung (Dropdowns) ---------- */
+const MC_R2=[
+  { q:'Was belohnt der Algorithmus von Plattformen wie TikTok oder Instagram vor allem?',
+    options:[
+      {t:'Beiträge mit viel Interaktion – Likes, Kommentare, Teilen.', correct:true},
+      {t:'Beiträge, die vorher von unabhängigen Faktencheckern geprüft und ausdrücklich freigegeben wurden.', correct:false},
+      {t:'Beiträge, die besonders lang, ausführlich und sachlich geschrieben sind.', correct:false},
+      {t:'Beiträge in alphabetischer Reihenfolge der Nutzernamen, damit alle gleich oft gezeigt werden.', correct:false},
+    ]},
+  { q:'Was fand die große MIT-Studie (veröffentlicht 2018 in der Fachzeitschrift „Science") heraus?',
+    options:[
+      {t:'Falschmeldungen erreichten 1.500 Menschen etwa sechsmal schneller als wahre Meldungen.', correct:true},
+      {t:'Wahre Meldungen verbreiten sich etwa sechsmal schneller als Falschmeldungen, weil sie glaubwürdiger wirken.', correct:false},
+      {t:'Falschmeldungen werden fast ausschließlich von automatischen Programmen verbreitet, kaum von echten Menschen.', correct:false},
+      {t:'Falschmeldungen erreichen nie mehr als 100 Menschen.', correct:false},
+    ]},
+  { q:'Was beschreibt der Begriff „Filterblase" am besten?',
+    options:[
+      {t:'Der Algorithmus zeigt mir vor allem Inhalte, die dem ähneln, was ich schon angeklickt habe.', correct:true},
+      {t:'Einen Filter der Plattform, der automatisch alle Falschmeldungen aus meinem Feed entfernt, bevor ich sie überhaupt sehe.', correct:false},
+      {t:'Eine Einstellung, mit der ich Werbung ausblenden kann.', correct:false},
+      {t:'Ein Schutzprogramm der Schule, das ungeeignete Internetseiten blockiert.', correct:false},
+    ]},
+];
+const R2_PAIRS=[
+  {key:'algo', label:'Algorithmus', correct:'a'},
+  {key:'echo', label:'Echokammer', correct:'b'},
+  {key:'ki', label:'KI-Bildgenerator', correct:'c'},
+];
+const R2_DESC={
+  a:'Computerprogramm, das entscheidet, welche Beiträge dir angezeigt werden – und Beiträge mit viel Interaktion bevorzugt.',
+  b:'Ein Umfeld, in dem sich alle gegenseitig bestätigen und Gegenmeinungen kaum noch vorkommen.',
+  c:'Programm, das in Sekunden täuschend echte Fotos erfindet – wie das berühmte Bild vom Papst in der weißen Daunenjacke.',
+  d:'Gesetz, das Plattformen verpflichtet, jede Falschmeldung innerhalb von einer Minute zu löschen.',
+  e:'Eingebauter Wahrheits-Scanner, der jeden Beitrag vor dem Hochladen automatisch auf Fakten prüft.',
+};
+let r2Submitted=false; let r2McState=[];
+function renderRoom2(){
+  state.screen='room2'; renderSeals(); window.scrollTo({top:0,behavior:'instant'});
+  r2Submitted=false;
+  r2McState=MC_R2.map(q=>({q:q.q, options:shuffle(q.options), chosen:null}));
+  const room=ROOMS[1];
+  const mcHtml=r2McState.map((qq,qi)=>`
+    <div class="mc-question" id="mcq2-${qi}">
+      <div class="mc-q-text">${qi+1}. ${qq.q}</div>
+      ${qq.options.map((o,oi)=>`<button class="mc-option" id="mcv2-${qi}-${oi}" onclick="pickR2Mc(${qi},${oi})"><span class="dot"></span><span>${o.t}</span></button>`).join('')}
+    </div>`).join('');
+  const allKeys=shuffle(Object.keys(R2_DESC));
+  const optionsHtml=allKeys.map(k=>`<option value="${k}">${R2_DESC[k]}</option>`).join('');
+  const rows=R2_PAIRS.map((p,i)=>`
+    <div class="match-row">
+      <div class="match-left">${i+1}. ${p.label}</div>
+      <select class="match-select" id="r2-${p.key}">
+        <option value="">— Beschreibung wählen —</option>
+        ${optionsHtml}
+      </select>
+    </div>`).join('');
+  root.innerHTML=`${roomHeader(room)}
+    <p class="body-lg" style="margin-bottom:4px;"><strong>Teil 1:</strong> Drei Fragen zur Mechanik dahinter.</p>
+    <div class="card">${mcHtml}</div>
+    <p class="body-lg" style="margin:18px 0 4px;"><strong>Teil 2:</strong> Ordne jedem Begriff die passende Beschreibung zu.</p>
+    <div class="card">${rows}</div>
+    ${roomFooter('Teil 1: Der Algorithmus prüft nicht, ob etwas stimmt – er misst Reaktionen. Und in der MIT-Studie waren die Lügen die Schnelleren. Teil 2: Zwei Beschreibungen klingen nach Wunschdenken – so etwas gibt es (leider) nicht.','checkR2()')}`;
+}
+window.pickR2Mc=(qi,oi)=>{
+  if(r2Submitted) return;
+  r2McState[qi].chosen=oi;
+  r2McState[qi].options.forEach((o,k)=>{
+    document.getElementById(`mcv2-${qi}-${k}`).classList.toggle('selected',k===oi);
+  });
+};
+window.checkR2=()=>{
+  if(r2McState.some(q=>q.chosen===null)){ showStatus('warning','Noch unvollständig','Bitte beantworte alle drei Fragen aus Teil 1.'); return; }
+  let allCorrect=true; const errors=[];
+  r2McState.forEach((qq,qi)=>{
+    const chosen=qq.chosen;
+    const correctIdx=qq.options.findIndex(o=>o.correct);
+    const okay=qq.options[chosen].correct;
+    const el=document.getElementById(`mcv2-${qi}-${chosen}`);
+    el.classList.remove('selected'); el.classList.add(okay?'correct':'incorrect');
+    if(!okay){
+      allCorrect=false;
+      document.getElementById(`mcv2-${qi}-${correctIdx}`).classList.add('correct');
+      errors.push({kind:'mc_falsch', item:'Frage '+(qi+1)+': '+qq.q, wrongAnswer:qq.options[chosen].t, correctAnswer:qq.options[correctIdx].t});
+    }
+  });
+  R2_PAIRS.forEach(p=>{
+    const sel=document.getElementById('r2-'+p.key); const val=sel.value;
+    sel.classList.remove('ok','bad');
+    if(val===p.correct){ sel.classList.add('ok'); }
+    else{ sel.classList.add('bad'); allCorrect=false;
+      errors.push({kind:'zuordnung_falsch', item:p.label, wrongAnswer:val?R2_DESC[val]:'(leer)', correctAnswer:R2_DESC[p.correct]}); }
+  });
+  recordAttempt(1,{errors});
+  if(allCorrect){ r2Submitted=true; showStatus('success','Richtig','Beweisstück gesichert. Ihr könnt jetzt erklären, warum der Fake in 47 Minuten die halbe Schule erreicht hat.'); setTimeout(()=>triggerReveal(1),800); }
+  else{
+    showStatus('warning','Noch nicht ganz','Rot markierte Stellen stimmen noch nicht. Schau dir auch die grün markierten richtigen Antworten an und korrigiere deine Wahl.');
+    setTimeout(()=>{
+      r2McState.forEach((qq,qi)=>qq.options.forEach((o,k)=>{
+        const el=document.getElementById(`mcv2-${qi}-${k}`); el.classList.remove('correct','incorrect');
+        if(qq.chosen===k) el.classList.add('selected');
+      }));
+    },4500);
+  }
+};
+
+/* ---------- Room 3: Akteurs-Zuordnung + Fakten-MC (Fall NIUS) ---------- */
+const R3_PAIRS=[
+  {key:'presserat', label:'Deutscher Presserat', correct:'a'},
+  {key:'mabb', label:'Medienanstalt Berlin-Brandenburg', correct:'b'},
+  {key:'reichelt', label:'Julian Reichelt', correct:'c'},
+  {key:'gotthardt', label:'Frank Gotthardt', correct:'d'},
+];
+const R3_DESC={
+  a:'Freiwillige Selbstkontrolle der Presse: prüft Verstöße gegen den Pressekodex und kann öffentliche Rügen aussprechen – aber nur bei Medien, die mitmachen.',
+  b:'Staatsferne Aufsichtsbehörde: prüft bei Online-Medien die journalistische Sorgfaltspflicht und hat NIUS bereits beanstandet.',
+  c:'Chefredakteur von NIUS; musste 2021 seinen Posten bei der „Bild" nach Vorwürfen wegen seines Verhaltens verlassen.',
+  d:'Unternehmer und Geldgeber von NIUS; trat zugleich als Großspender der CDU auf.',
+  e:'Staatliches Ministerium, das jeden Zeitungsartikel vor der Veröffentlichung genehmigen muss.',
+  f:'Gericht, das automatisch jede deutsche Nachrichtenseite einmal im Monat kontrolliert.',
+};
+const MC_R3=[
+  { q:'Warum kann der Deutsche Presserat NIUS nicht rügen?',
+    options:[
+      {t:'Weil NIUS bei der freiwilligen Selbstkontrolle nicht mitmacht.', correct:true},
+      {t:'Weil NIUS bisher noch nie gegen eine einzige Regel des Pressekodex verstoßen hat.', correct:false},
+      {t:'Weil der Presserat ausschließlich Fernsehsender und Radiosender kontrolliert, aber keine Internetseiten.', correct:false},
+      {t:'Weil für Nachrichtenseiten im Internet grundsätzlich keinerlei Regeln gelten.', correct:false},
+    ]},
+  { q:'Was ist über die erfundenen Zitate bei NIUS bekannt?',
+    options:[
+      {t:'NIUS verbreitete u. a. ein erfundenes Selenskyj-Zitat; Reichelt erklärte das mit KI-Experimenten.', correct:true},
+      {t:'Die angeblich erfundenen Zitate stellten sich bei einer späteren Prüfung ausnahmslos als wahr heraus.', correct:false},
+      {t:'Ein Praktikant hatte die Zitate versehentlich aus einem alten Schulbuch abgeschrieben, ohne es zu bemerken.', correct:false},
+      {t:'Es gab nie erfundene Zitate – das war selbst eine Falschmeldung.', correct:false},
+    ]},
+  { q:'Warum wird die Verbindung zwischen NIUS und seinem Geldgeber öffentlich diskutiert?',
+    options:[
+      {t:'Weil Geldgeber Gotthardt zugleich als Großspender einer Partei auftrat – wie unabhängig ist NIUS dann?', correct:true},
+      {t:'Weil NIUS in Wahrheit gar keinen Geldgeber hat und deshalb, wie Kritiker behaupten, kurz vor der Pleite steht.', correct:false},
+      {t:'Weil der Geldgeber der Redaktion ausdrücklich verboten hat, überhaupt noch über politische Themen oder Parteien zu berichten.', correct:false},
+      {t:'Weil der deutsche Staat NIUS vollständig finanziert.', correct:false},
+    ]},
+];
+let r3Submitted=false; let r3McState=[];
+function renderRoom3(){
+  state.screen='room3'; renderSeals(); window.scrollTo({top:0,behavior:'instant'});
+  r3Submitted=false;
+  r3McState=MC_R3.map(q=>({q:q.q, options:shuffle(q.options), chosen:null}));
+  const room=ROOMS[2];
+  const allKeys=shuffle(Object.keys(R3_DESC));
+  const optionsHtml=allKeys.map(k=>`<option value="${k}">${R3_DESC[k]}</option>`).join('');
+  const rows=R3_PAIRS.map((p,i)=>`
+    <div class="match-row">
+      <div class="match-left">${i+1}. ${p.label}</div>
+      <select class="match-select" id="r3-${p.key}">
+        <option value="">— Rolle wählen —</option>
+        ${optionsHtml}
+      </select>
+    </div>`).join('');
+  const mcHtml=r3McState.map((qq,qi)=>`
+    <div class="mc-question" id="mcq3-${qi}">
+      <div class="mc-q-text">${qi+1}. ${qq.q}</div>
+      ${qq.options.map((o,oi)=>`<button class="mc-option" id="mcv3-${qi}-${oi}" onclick="pickR3Mc(${qi},${oi})"><span class="dot"></span><span>${o.t}</span></button>`).join('')}
+    </div>`).join('');
+  root.innerHTML=`${roomHeader(room)}
+    <p class="body-lg" style="margin-bottom:4px;"><strong>Teil 1:</strong> Wer spielt welche Rolle? Ordne zu.</p>
+    <div class="card">${rows}</div>
+    <p class="body-lg" style="margin:18px 0 4px;"><strong>Teil 2:</strong> Drei Faktenfragen zum Fall NIUS.</p>
+    <div class="card">${mcHtml}</div>
+    ${roomFooter('Teil 1: Ein Akteur kontrolliert freiwillig, einer als Behörde, einer leitet die Redaktion, einer bezahlt sie. Die beiden übrigen Beschreibungen wären in Deutschland gar nicht erlaubt bzw. existieren nicht – Zeitungen werden hier nicht vom Staat vorab genehmigt. Teil 2: Denk an das Briefing – Selbstkontrolle nur für Mitglieder, KI-Experimente, Parteispenden.','checkR3()')}`;
+}
+window.pickR3Mc=(qi,oi)=>{
+  if(r3Submitted) return;
+  r3McState[qi].chosen=oi;
+  r3McState[qi].options.forEach((o,k)=>{
+    document.getElementById(`mcv3-${qi}-${k}`).classList.toggle('selected',k===oi);
+  });
+};
+window.checkR3=()=>{
+  if(r3McState.some(q=>q.chosen===null)){ showStatus('warning','Noch unvollständig','Bitte beantworte auch alle drei Fragen aus Teil 2.'); return; }
+  let allCorrect=true; const errors=[];
+  R3_PAIRS.forEach(p=>{
+    const sel=document.getElementById('r3-'+p.key); const val=sel.value;
+    sel.classList.remove('ok','bad');
+    if(val===p.correct){ sel.classList.add('ok'); }
+    else{ sel.classList.add('bad'); allCorrect=false;
+      errors.push({kind:'zuordnung_falsch', item:p.label, wrongAnswer:val?R3_DESC[val]:'(leer)', correctAnswer:R3_DESC[p.correct]}); }
+  });
+  r3McState.forEach((qq,qi)=>{
+    const chosen=qq.chosen;
+    const correctIdx=qq.options.findIndex(o=>o.correct);
+    const okay=qq.options[chosen].correct;
+    const el=document.getElementById(`mcv3-${qi}-${chosen}`);
+    el.classList.remove('selected'); el.classList.add(okay?'correct':'incorrect');
+    if(!okay){
+      allCorrect=false;
+      document.getElementById(`mcv3-${qi}-${correctIdx}`).classList.add('correct');
+      errors.push({kind:'mc_falsch', item:'Frage '+(qi+1)+': '+qq.q, wrongAnswer:qq.options[chosen].t, correctAnswer:qq.options[correctIdx].t});
+    }
+  });
+  recordAttempt(2,{errors});
+  if(allCorrect){ r3Submitted=true; showStatus('success','Richtig','Beweisstück gesichert. Wer schreibt, wem gehört sie, wer bezahlt, wer kontrolliert – diese vier Fragen sitzen jetzt.'); setTimeout(()=>triggerReveal(2),800); }
+  else{
+    showStatus('warning','Noch nicht ganz','Rot markierte Stellen stimmen noch nicht. Schau dir auch die grün markierten richtigen Antworten an und korrigiere.');
+    setTimeout(()=>{
+      r3McState.forEach((qq,qi)=>qq.options.forEach((o,k)=>{
+        const el=document.getElementById(`mcv3-${qi}-${k}`); el.classList.remove('correct','incorrect');
+        if(qq.chosen===k) el.classList.add('selected');
+      }));
+    },4500);
+  }
+};
+
+/* ---------- Room 4: URL-Check (echt/Fälschung) + freier Lückentext ---------- */
+const PUZZLE_R4=[
+  {id:'r4a', text:'https://www.spiegel.de', correct:'echt'},
+  {id:'r4b', text:'https://www.spiegel.ltd', correct:'fake'},
+  {id:'r4c', text:'https://www.tagesschau.de', correct:'echt'},
+  {id:'r4d', text:'https://www.faz.ltd', correct:'fake'},
+  {id:'r4e', text:'https://www.faz.net', correct:'echt'},
+  {id:'r4f', text:'https://www.tagesschau-aktuell.info', correct:'fake'},
+];
+const R4_URL_LABEL={echt:'echte Adresse',fake:'Fälschung'};
+const R4_BLANKS=[
+  {id:0, accept:['doppelgänger','doppelgaenger','doppelganger'], solution:'Doppelgänger', label:'Lücke 1 (Name der Kampagne)',
+   hints:['Der Name der Kampagne bedeutet so viel wie „exakter Zwilling" – jemand, der genauso aussieht wie ein anderer.','Das Wort beginnt mit „Doppel…".','Doppelg_ng_r']},
+  {id:1, accept:['russland'], solution:'Russland', label:'Lücke 2 (Land, aus dem die Kampagne gesteuert wird)',
+   hints:['Das Land, das die Ukraine angegriffen hat.','Beginnt mit R und endet auf „-land".','R_ssl_nd']},
+  {id:2, accept:['bots','social bots','socialbots','bot','social bot','roboter'], solution:'Bots', label:'Lücke 3 (automatische Programme)',
+   hints:['Automatische Programme, die posten, liken und kommentieren wie Menschen – die Abkürzung von „Roboter".','Ein kurzes Wort mit 4 Buchstaben; oft steht „Social" davor.','B_ts']},
+  {id:3, accept:['spalten','spaltung'], solution:'spalten', label:'Lücke 4 (Ziel: die Gesellschaft …)',
+   hints:['Die Menschen sollen sich gegenseitig misstrauen und in Lager zerfallen – die Gesellschaft soll …','Das Verb gehört zu dem Wort „Spaltung".','sp_lt_n']},
+  {id:4, accept:['adresse','internetadresse','webadresse','adresszeile','url','domain','adressendung','endung','internet adresse','web adresse'], solution:'Adresse', label:'Lücke 5 (woran man die Fälschung erkennt)',
+   hints:['Was steht ganz oben im Browser, wenn du eine Seite öffnest?','Internet…, Web… – oder das Wort, das ganz allein schon passt. Es endet auf „-zeile", wenn man es lang sagt.','Adr_ss_']},
+];
+let r4Choice={}; let r4Submitted=false; let r4Order=[]; let r4Fails=0;
+function r4Input(i){ return `<input type="text" class="cloze-input" id="r4blank-${i}" maxlength="30" autocomplete="off" spellcheck="false">`; }
+function renderRoom4(){
+  state.screen='room4'; renderSeals(); window.scrollTo({top:0,behavior:'instant'});
+  r4Choice={}; r4Submitted=false; r4Fails=0;
+  r4Order=shuffle(PUZZLE_R4);
+  const room=ROOMS[3];
+  const rows=r4Order.map(it=>`
+    <div class="classify-row" id="r4row-${it.id}">
+      <div class="classify-text"><span class="url">${it.text}</span></div>
+      <div class="classify-btns">
+        <button class="classify-btn" id="r4-${it.id}-echt" onclick="pickR4('${it.id}','echt')">echte Adresse</button>
+        <button class="classify-btn" id="r4-${it.id}-fake" onclick="pickR4('${it.id}','fake')">Fälschung</button>
+      </div>
+    </div>`).join('');
+  const cloze=`
+    <div class="card"><p class="cloze">
+      Ermittlungsbericht der Redaktion: Seit 2022 kopiert eine Kampagne mit dem Namen ${r4Input(0)} bekannte deutsche Nachrichtenseiten täuschend echt.
+      Gesteuert wird sie laut Sicherheitsbehörden aus ${r4Input(1)}.
+      Verbreitet werden die gefälschten Artikel unter anderem durch automatische Programme, sogenannte ${r4Input(2)}, und hunderttausende gefälschte Konten.
+      Ziel ist es, Ängste zu verstärken und die Gesellschaft zu ${r4Input(3)}.
+      Am schnellsten erkennt man die Fälschungen an der ${r4Input(4)} – vor allem an ihrer Endung.
+    </p>
+    <div id="r4help" class="cloze-help"></div></div>`;
+  root.innerHTML=`${roomHeader(room)}
+    <p class="body-lg" style="margin-bottom:4px;"><strong>Teil 1:</strong> Prüfe jede Adresse – echt oder Fälschung?</p>
+    <div class="card">${rows}</div>
+    <p class="body-lg" style="margin:18px 0 4px;"><strong>Teil 2:</strong> Vervollständige den Ermittlungsbericht (selbst eintippen).</p>
+    ${cloze}
+    ${roomFooter('Teil 1: Die echten Adressen enden auf .de bzw. .net – Vorsicht bei .ltd und bei Zusätzen wie „-aktuell". Teil 2: Der Name der Kampagne bedeutet so viel wie „exakter Zwilling" – und die Programme, die liken und teilen wie Menschen, kennst du aus dem Briefing.','checkR4()')}`;
+}
+window.pickR4=(id,val)=>{
+  if(r4Submitted) return;
+  r4Choice[id]=val;
+  document.getElementById(`r4-${id}-echt`).classList.toggle('active',val==='echt');
+  document.getElementById(`r4-${id}-fake`).classList.toggle('active',val==='fake');
+};
+window.checkR4=()=>{
+  if(Object.keys(r4Choice).length<PUZZLE_R4.length){ showStatus('warning','Noch unvollständig','Bitte prüfe jede Adresse in Teil 1.'); return; }
+  let allCorrect=true; const errors=[];
+  PUZZLE_R4.forEach(it=>{
+    const row=document.getElementById('r4row-'+it.id); row.classList.remove('correct','incorrect');
+    if(r4Choice[it.id]===it.correct) row.classList.add('correct');
+    else{ row.classList.add('incorrect'); allCorrect=false;
+      errors.push({kind:'falsch_einsortiert', item:it.text, wrongAnswer:R4_URL_LABEL[r4Choice[it.id]], correctAnswer:R4_URL_LABEL[it.correct]}); }
+  });
+  const wrongBlanks4=[];
+  R4_BLANKS.forEach(b=>{
+    const inp=document.getElementById('r4blank-'+b.id); const val=inp.value;
+    inp.classList.remove('ok','bad');
+    if(b.accept.includes(normalizeAnswer(val))){ inp.classList.add('ok'); }
+    else{ inp.classList.add('bad'); allCorrect=false; wrongBlanks4.push(b.id);
+      errors.push({kind:'luecke_falsch', item:b.label, wrongAnswer:val.trim()||'(leer)', correctAnswer:b.solution}); }
+  });
+  if(wrongBlanks4.length) r4Fails++;
+  renderClozeHelp('r4help', R4_BLANKS, wrongBlanks4, r4Fails);
+  recordAttempt(3,{errors});
+  if(allCorrect){ r4Submitted=true; showStatus('success','Richtig','Beweisstück gesichert. Der Klon-Trick funktioniert bei euch nicht mehr – ihr lest Adresszeilen jetzt wie Profis.'); setTimeout(()=>triggerReveal(3),800); }
+  else{ showStatus('warning','Noch nicht ganz','Die rot markierten Stellen stimmen noch nicht. Prüfe die Adressen Zeichen für Zeichen und die Lücken noch einmal.'); setTimeout(()=>{ PUZZLE_R4.forEach(it=>document.getElementById('r4row-'+it.id).classList.remove('correct','incorrect')); },4500); }
+};
+
+/* ---------- Room 5: Prüfschritt-Zuordnung + Multi-Select + Schlussstein ---------- */
+const R5_PAIRS=[
+  {key:'impressum', label:'Quelle & Impressum prüfen', correct:'a'},
+  {key:'adresse', label:'Adresszeile exakt lesen', correct:'b'},
+  {key:'bild', label:'Bild-Rückwärtssuche', correct:'c'},
+  {key:'quer', label:'Quervergleich & Faktenchecker', correct:'d'},
+];
+const R5_DESC={
+  a:'„kassel-klartext.info" nennt keinen Verantwortlichen – niemand steht mit Namen und Adresse für die Inhalte ein.',
+  b:'Die Seite ahmt den Look einer echten Nachrichtenseite nach, aber die Internetadresse passt nicht zum Original.',
+  c:'Das Foto des „Geheimdokuments" stammt aus einem drei Jahre alten Artikel über eine ganz andere Stadt.',
+  d:'Kein seriöses Medium berichtet über eine Schließung – und Schulleitung und Staatliches Schulamt dementieren offiziell.',
+  e:'Der Post hat über 2.800 Likes – so viele Menschen können sich nicht irren.',
+  f:'Der Account folgt mehreren Lehrern der Schule und ist deshalb vertrauenswürdig.',
+};
+const PUZZLE_R5=[
+  {id:'r5a', text:'Die Quelle des Posts hat kein Impressum – ein klares Warnsignal.', correct:true, expl:'Gehört ins Dossier: In Deutschland ist ein Impressum für solche Seiten Pflicht – fehlt es, übernimmt niemand Verantwortung.'},
+  {id:'r5b', text:'Das „Beweisfoto" ist alt und stammt aus einem ganz anderen Zusammenhang.', correct:true, expl:'Gehört ins Dossier: Die Bild-Rückwärtssuche hat es eindeutig belegt.'},
+  {id:'r5c', text:'Der Post hat 2.847 Likes – das beweist, dass etwas dran sein muss.', correct:false, expl:'Gehört NICHT ins Dossier: Likes messen Aufmerksamkeit, nicht Wahrheit. Beliebt ist nicht gleich wahr.'},
+  {id:'r5d', text:'Kein einziges seriöses Medium berichtet über eine Schulschließung.', correct:true, expl:'Gehört ins Dossier: Eine echte „Riesen-Nachricht" würde von vielen Redaktionen aufgegriffen.'},
+  {id:'r5e', text:'Die Meldung fühlt sich irgendwie wahr an – also sollte man sie sicherheitshalber teilen.', correct:false, expl:'Gehört NICHT ins Dossier: Das Bauchgefühl ist genau der Hebel, an dem Desinformation ansetzt. Erst checken, dann teilen.'},
+  {id:'r5f', text:'Schulleitung und Staatliches Schulamt dementieren die Schließung offiziell.', correct:true, expl:'Gehört ins Dossier: Die direkt Betroffenen und die zuständige Behörde sind hier die stärksten Quellen.'},
+  {id:'r5g', text:'Der Post nutzt typische Täuschungssignale: Zeitdruck, Großbuchstaben, ein angebliches Geheimdokument ohne Beleg.', correct:true, expl:'Gehört ins Dossier: Genau diese Muster habt ihr in Beweisstück 1 kennengelernt.'},
+  {id:'r5h', text:'Weil der Account anonym ist, kann man ihm besonders vertrauen – er hat ja nichts zu verlieren.', correct:false, expl:'Gehört NICHT ins Dossier: Anonymität bedeutet vor allem, dass niemand für Falschbehauptungen geradestehen muss.'},
+];
+const R5_KEYSTONE_ACCEPT=['checken','check','prüfen','pruefen','nachprüfen','nachpruefen','überprüfen','ueberpruefen','kontrollieren'];
+const R5_KEYSTONE=[{id:0, solution:'checken (auch richtig: prüfen)', label:'Schlagzeile',
+  hints:['Das Wort steckt im Namen des „5-Schritte-…" aus dem Briefing.','Ein englisches Wort, das wir auch im Deutschen benutzen – es bedeutet „prüfen", und auch „prüfen" selbst wird akzeptiert.','ch_ck_n']}];
+let r5Selected=new Set(); let r5Submitted=false; let r5Order=[]; let r5Fails=0;
+function renderRoom5(){
+  state.screen='room5'; renderSeals(); window.scrollTo({top:0,behavior:'instant'});
+  r5Selected=new Set(); r5Submitted=false; r5Fails=0;
+  r5Order=shuffle(PUZZLE_R5);
+  const room=ROOMS[4];
+  const allKeys=shuffle(Object.keys(R5_DESC));
+  const optionsHtml=allKeys.map(k=>`<option value="${k}">${R5_DESC[k]}</option>`).join('');
+  const rows=R5_PAIRS.map((p,i)=>`
+    <div class="match-row">
+      <div class="match-left">${i+1}. ${p.label}</div>
+      <select class="match-select" id="r5-${p.key}">
+        <option value="">— Ergebnis wählen —</option>
+        ${optionsHtml}
+      </select>
+    </div>`).join('');
+  const cards=r5Order.map(m=>`<button class="multi-card" id="r5-${m.id}" onclick="toggleR5('${m.id}')"><span class="box"></span><span>${m.text}</span></button>`).join('');
+  root.innerHTML=`${roomHeader(room)}
+    <p class="body-lg" style="margin-bottom:4px;"><strong>Teil 1:</strong> Welcher Prüfschritt hat im Fall welches Ergebnis geliefert?</p>
+    <div class="card">${rows}</div>
+    <p class="body-lg" style="margin:18px 0 4px;"><strong>Teil 2:</strong> Wähle <strong>alle</strong> Punkte aus, die ins Beweis-Dossier gehören. Achtung: Es sind auch Blindgänger dabei.</p>
+    <div class="multi-grid">${cards}</div>
+    <div class="card">
+      <p class="body-lg" style="margin-bottom:10px;"><strong>Teil 3 · Die Schlagzeile.</strong> Das Dossier ist fertig, Ayla tippt die Überschrift für die nächste Ausgabe der Schülerzeitung: <em>„Erst ____, dann teilen!"</em> Welches Wort fehlt? <em>(ein einzelnes Wort)</em></p>
+      <input id="r5input" class="text-input" type="text" maxlength="40" placeholder="Antwort eingeben …" style="max-width:360px;" onkeydown="if(event.key==='Enter') checkR5()">
+      <div id="r5help" class="cloze-help"></div>
+    </div>
+    ${roomFooter('Teil 1: Zwei der Ergebnisse sind keine Prüfschritt-Ergebnisse, sondern Denkfehler. Teil 2: Fünf Punkte gehören ins Dossier, drei nicht – Likes und Bauchgefühl beweisen nichts. Teil 3: Das Wort steckt im Namen des 5-Schritte-… na?','checkR5()')}`;
+}
+window.toggleR5=(id)=>{
+  if(r5Submitted) return;
+  const c=document.getElementById('r5-'+id);
+  if(r5Selected.has(id)){ r5Selected.delete(id); c.classList.remove('selected'); }
+  else{ r5Selected.add(id); c.classList.add('selected'); }
+};
+window.checkR5=()=>{
+  let allCorrect=true; const errors=[];
+  R5_PAIRS.forEach(p=>{
+    const sel=document.getElementById('r5-'+p.key); const val=sel.value;
+    sel.classList.remove('ok','bad');
+    if(val===p.correct){ sel.classList.add('ok'); }
+    else{ sel.classList.add('bad'); allCorrect=false;
+      errors.push({kind:'zuordnung_falsch', item:p.label, wrongAnswer:val?R5_DESC[val]:'(leer)', correctAnswer:R5_DESC[p.correct]}); }
+  });
+  PUZZLE_R5.forEach(m=>{
+    const c=document.getElementById('r5-'+m.id); c.classList.remove('selected','correct','incorrect','missed');
+    const sel=r5Selected.has(m.id);
+    if(sel&&m.correct) c.classList.add('correct');
+    else if(sel&&!m.correct){ c.classList.add('incorrect'); allCorrect=false; errors.push({kind:'falsch_gewaehlt', item:m.text, explanation:m.expl}); }
+    else if(!sel&&m.correct){ c.classList.add('missed'); allCorrect=false; errors.push({kind:'uebersehen', item:m.text, explanation:m.expl}); }
+  });
+  const inputEl=document.getElementById('r5input');
+  const val=inputEl.value;
+  const inputOk=R5_KEYSTONE_ACCEPT.includes(normalizeAnswer(val));
+  if(!inputOk){ allCorrect=false; inputEl.style.borderColor='var(--error)'; r5Fails++; errors.push({kind:'falsche_eingabe', item:'Schlagzeile: „Erst ____, dann teilen!"', wrongAnswer:val||'(leer)', correctAnswer:'checken (auch richtig: prüfen)'}); }
+  else inputEl.style.borderColor='var(--success)';
+  renderClozeHelp('r5help', R5_KEYSTONE, inputOk?[]:[0], r5Fails);
+  recordAttempt(4,{errors});
+  if(allCorrect){ r5Submitted=true; showStatus('success','Richtig','Das Dossier ist wasserdicht – und die Schlagzeile sitzt. Zeit für die Schulkonferenz.'); setTimeout(()=>triggerReveal(4),800); }
+  else{
+    showStatus('warning','Noch nicht ganz','Rot = falsch gewählt oder falsch zugeordnet, gold = übersehen. Lies die Markierungen, korrigiere deine Auswahl und prüfe die Schlagzeile.');
+    setTimeout(()=>{ PUZZLE_R5.forEach(m=>{ const c=document.getElementById('r5-'+m.id); c.classList.remove('correct','incorrect','missed'); if(r5Selected.has(m.id)) c.classList.add('selected'); }); },4500);
+  }
+};
+
+/* ============================================================
+   REVEAL & ROUTER
+   ============================================================ */
+function triggerReveal(roomIdx){
+  state.solved[roomIdx]=true; state.letters[roomIdx]=CODE_WORD[roomIdx];
+  const overlay=document.getElementById('revealOverlay');
+  document.getElementById('revealLetter').textContent=CODE_WORD[roomIdx];
+  document.getElementById('revealCaption').textContent=`Beweisstück ${roomIdx+1} von 5 gesichert · Buchstabe freigeschaltet`;
+  const progBox=document.getElementById('revealProgress'); progBox.innerHTML='';
+  for(let i=0;i<5;i++){ const span=document.createElement('span'); span.className='reveal-progress-letter'+(state.solved[i]?' lit':''); span.textContent=state.solved[i]?CODE_WORD[i]:'·'; progBox.appendChild(span); }
+  const btn=document.getElementById('revealContinue'); const isLast=roomIdx===4;
+  btn.textContent=isLast?'Fall abschließen':'Nächstes Redaktions-Briefing öffnen';
+  btn.onclick=()=>{ overlay.classList.remove('show'); setTimeout(()=>{ if(isLast) renderFinal(); else goLibrary(roomIdx+2); },250); };
+  overlay.classList.add('show');
+}
+window.goRoom=(n)=>{
+  window.scrollTo({top:0,behavior:'instant'});
+  switch(n){ case 1:renderRoom1();break; case 2:renderRoom2();break; case 3:renderRoom3();break; case 4:renderRoom4();break; case 5:renderRoom5();break; }
+};
+
+/* ============================================================
+   FINAL
+   ============================================================ */
+function renderFinal(){
+  state.screen='final';
+  if(!state.completedAt) state.completedAt=new Date();
+  renderSeals(); window.scrollTo({top:0,behavior:'instant'});
+  const totalErrors=state.mistakes.reduce((a,m)=>a+(m&&m.errors?m.errors.length:0),0);
+  const perfectRooms=state.attempts.filter((a,i)=>a>=1 && (!state.mistakes[i]||!state.mistakes[i].errors||state.mistakes[i].errors.length===0)).length;
+  const summary = totalErrors===0
+    ? `Alle fünf Beweisstücke im ersten Versuch fehlerfrei – stark, ${escapeHtml(state.firstName)}.`
+    : `Du hast ${perfectRooms} von 5 Beweisstücken im ersten Versuch fehlerfrei gesichert (${totalErrors} Erstversuchs-Fehler). Im Überblick findest du alle mit Erklärung.`;
+
+  root.innerHTML=`
+    <div class="final-hero">
+      <div class="kicker" style="justify-content:center;">Fall abgeschlossen · Lösungswort</div>
+      <div class="final-code">${CODE_WORD}</div>
+      <p class="lede" style="margin:20px auto 0; max-width:58ch;">
+        Geschafft, ${escapeHtml(state.firstName)}! Das Beweis-Dossier lag pünktlich auf dem Tisch der Schulkonferenz: <strong>Die Schule wird nicht geschlossen</strong> – der Post war eine Desinformation von A bis Z.
+      </p>
+      <p class="text-mute" style="margin-top:12px; max-width:58ch; margin-left:auto; margin-right:auto; font-size:13.5px;">${summary}</p>
+    </div>
+
+    <div class="card card-accent">
+      <div class="briefing">
+        <span class="speaker">Ayla · Auflösung des Falls</span>
+        Und wer steckte nun hinter <strong>@lichtenberg.leaks</strong>? Den Namen kennen wir nicht – aber das <strong>Motiv</strong>. Kurz nach dem viralen Post begann der Account, Werbung zu posten: Energy-Drinks, Handyhüllen, „Rabattcodes". Der Skandal war nur der Köder: <strong>Mit Empörung Follower sammeln, mit Followern Geld verdienen.</strong> Aufmerksamkeit ist im Netz eine Währung – und Angst ist der schnellste Weg, sie zu bekommen. Wir haben den Account gemeldet, inzwischen ist er offline. Wichtiger ist aber: Beim nächsten Fake seid ihr schneller als der Algorithmus.
+      </div>
+    </div>
+
+    <div class="journey-wrap">
+      <svg viewBox="0 0 540 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Die Spur des Falls in fünf Stationen">
+        <path d="M 45 205 Q 140 55 270 120 Q 400 185 495 70" fill="none" stroke="#d62976" stroke-width="2.5" stroke-dasharray="6 5" opacity="0.55"/>
+        <!-- Station 1 -->
+        <circle cx="45" cy="205" r="22" fill="#feda75"/>
+        <text x="45" y="211" text-anchor="middle" fill="#262626" font-family="Poppins,sans-serif" font-size="14" font-weight="700">1</text>
+        <text x="45" y="240" text-anchor="middle" fill="#262626" font-family="Inter,sans-serif" font-size="10" font-weight="600">Der Fake-Post</text>
+        <!-- Station 2 -->
+        <circle cx="160" cy="88" r="22" fill="#fa7e1e"/>
+        <text x="160" y="94" text-anchor="middle" fill="#ffffff" font-family="Poppins,sans-serif" font-size="14" font-weight="700">2</text>
+        <text x="160" y="60" text-anchor="middle" fill="#262626" font-family="Inter,sans-serif" font-size="10" font-weight="600">Der Algorithmus</text>
+        <!-- Station 3 -->
+        <circle cx="270" cy="120" r="22" fill="#d62976"/>
+        <text x="270" y="126" text-anchor="middle" fill="#ffffff" font-family="Poppins,sans-serif" font-size="14" font-weight="700">3</text>
+        <text x="270" y="156" text-anchor="middle" fill="#262626" font-family="Inter,sans-serif" font-size="10" font-weight="600">Die dubiose Quelle</text>
+        <!-- Station 4 -->
+        <circle cx="385" cy="168" r="22" fill="#962fbf"/>
+        <text x="385" y="174" text-anchor="middle" fill="#ffffff" font-family="Poppins,sans-serif" font-size="14" font-weight="700">4</text>
+        <text x="385" y="204" text-anchor="middle" fill="#262626" font-family="Inter,sans-serif" font-size="10" font-weight="600">Die Klon-Adresse</text>
+        <!-- Station 5 -->
+        <circle cx="495" cy="70" r="22" fill="#4f5bd5"/>
+        <text x="495" y="76" text-anchor="middle" fill="#ffffff" font-family="Poppins,sans-serif" font-size="14" font-weight="700">5</text>
+        <text x="495" y="42" text-anchor="middle" fill="#262626" font-family="Inter,sans-serif" font-size="10" font-weight="600">Das Dossier</text>
+        <text x="270" y="22" text-anchor="middle" fill="#d62976" font-family="IBM Plex Mono,monospace" font-size="10" letter-spacing="2.5">DIE SPUR DES FALLS</text>
+      </svg>
+    </div>
+
+    <div class="card">
+      <h2 style="font-size:22px; margin-bottom:6px;">Zwei Schritte zum Abschluss</h2>
+      <p class="text-mute" style="font-size:13.5px; margin-bottom:20px;">Beide sind nötig, damit dein Lehrer den Abschluss verbuchen kann.</p>
+      <div class="final-actions">
+        <button class="final-action" onclick="downloadOverviewPDF()">
+          <div class="label">Schritt 1 · Pflicht</div>
+          <div class="title">„Überblick deiner Antworten &amp; Erläuterungen" herunterladen</div>
+          <div class="desc">Persönliche PDF mit deinem Namen, Geburtsdatum, Code und Abschlusszeit – plus Lösungserläuterungen zu allen fünf Beweisstücken. <strong style="color:var(--ig-magenta)">Lade sie in Moodle hoch.</strong></div>
+        </button>
+        <button class="final-action" onclick="openFeiditor()">
+          <div class="label">Schritt 2 · Digitales Arbeitsblatt</div>
+          <div class="title">Digitales Arbeitsblatt im Feiditor öffnen</div>
+          <div class="desc">Öffnet sich in einem neuen Tab. Dort sind die Aufgaben schon eingetragen – bearbeite sie direkt im Schreibbereich, wandle deinen Text am Ende in eine PDF-Datei um und lade diese bei Moodle hoch.</div>
+        </button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 style="font-size:18px; margin-bottom:10px;">Warum „CHECK"?</h3>
+      <p style="font-size:14.5px; margin-bottom:8px;">Das Lösungswort ist zugleich die wichtigste Lehre aus diesem Fall:</p>
+      <ul class="muted-list">
+        <li><strong>Der 5-Schritte-Check</strong> – Quelle &amp; Impressum, Adresszeile, Datum, Bild-Rückwärtssuche, Quervergleich – entlarvt fast jede Falschmeldung in wenigen Minuten.</li>
+        <li><strong>Erst checken, dann teilen</strong> – wer eine Meldung erst prüft, bevor er sie weiterschickt, nimmt der Desinformation genau das, wovon sie lebt: ungeprüfte Reichweite.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3 style="font-size:17px; margin-bottom:10px;">Was du gesichert hast</h3>
+      <ul class="muted-list">
+        <li><strong>Beweisstück 1</strong> – Desinformation, Falschinformation, Satire und Meinung sicher unterscheiden</li>
+        <li><strong>Beweisstück 2</strong> – Warum Algorithmen und Emotionen Falschmeldungen so schnell machen (MIT-Studie, Filterblase, Echokammer, KI-Bilder)</li>
+        <li><strong>Beweisstück 3</strong> – Vier Fragen an jede Quelle – und was der Fall NIUS über Geld, Politik und Kontrolle von Medien zeigt</li>
+        <li><strong>Beweisstück 4</strong> – Wie die russische „Doppelgänger"-Kampagne mit Klon-Seiten und Bots Deutschland spalten will</li>
+        <li><strong>Beweisstück 5</strong> – Der 5-Schritte-Check für jede verdächtige Meldung</li>
+      </ul>
+    </div>
+  `;
+}
+
+/* ============================================================
+   INIT
+   ============================================================ */
+renderStart();
+</script>
+</body>
+</html>
