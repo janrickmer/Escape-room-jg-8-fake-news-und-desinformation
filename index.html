@@ -2384,6 +2384,10 @@ window.submitStart=()=>{
 function renderIntro(){
   state.screen='intro'; renderSeals();
   root.innerHTML=`
+    <div class="video-wrap">
+      <iframe src="https://www.youtube.com/embed/ShLxo4Mrb0I?rel=0" title="So läuft der Escape-Room ab" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
+    </div>
+
     <div class="kicker">Der Fall</div>
     <h1 class="title-mega">Willkommen in der<br>Redaktion, <em>${escapeHtml(state.firstName)}</em></h1>
     <p class="lede">Heute Morgen, 07:42 Uhr. Dieser Post landet in sämtlichen Klassenchats – und die halbe Schule dreht durch:</p>
@@ -3555,6 +3559,10 @@ function renderFinal(){
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M4 19h16"/></svg>
         Überblick als PDF herunterladen
       </button>
+    </div>
+
+    <div class="video-wrap">
+      <iframe src="https://www.youtube.com/embed/Sh0REtJ1o5w?rel=0" title="So geht es in der Arena weiter" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
     </div>
 
     <div class="arena">
