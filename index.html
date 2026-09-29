@@ -1469,7 +1469,7 @@ function buildPayload(name,ser,vn,nn,interim){
   }
   const r=computeStats(text,m).redPct; // Rot-Anteil in Prozent, wie ihn die Lehrkraft-Ansicht zeigt
   const p={n:name,t:text,m,f,vn:vn||"",nn:nn||"",r,k:ser.blocks||[],v:2,z:interim?1:0};
-  if(escapeMode) p.e={esc:true,red:escapeRed};
+  if(escapeMode){ p.e={esc:true,red:escapeRed}; if(escapeCtx) p.e.ctx=escapeCtx; }
   return p;
 }
 
@@ -1505,6 +1505,7 @@ function setLink(el,blob,filename){
 
 let studentVorname="", studentNachname="";
 let escapeRed=[];     // Texte der roten Felder im Escape-Room-Modus
+let escapeCtx=null;   // Steckbrief des Escape-Rooms (Fach, Jahrgangsstufe, Thema, erarbeitete Inhalte) für die KI-Bewertung
 let escapeMode=false; // true: aus einem Escape-Room gestartet (Autostart oder Überblick-PDF)
 let prefilled=false;  // true: Aufgaben wurden vorbefüllt (Escape-Room, Lerntagebuch)
 
@@ -1756,7 +1757,7 @@ function rebuildEditorFromPayload(p){
 function resumeFromPayload(p){
   const nm=splitName(p); studentVorname=nm.vn; studentNachname=nm.nn;
   $("who-name").textContent=(studentVorname+" "+studentNachname).trim();
-  const e=p.e||null; escapeMode=!!(e&&e.esc); escapeRed=(e&&Array.isArray(e.red))?e.red:[];
+  const e=p.e||null; escapeMode=!!(e&&e.esc); escapeRed=(e&&Array.isArray(e.red))?e.red:[]; escapeCtx=escapeMode?cleanEscapeCtx(e.ctx):null;
   rebuildEditorFromPayload(p);
   const t=p.t||"", m=p.m||[];
   const fromFile=[];
@@ -2011,7 +2012,7 @@ $("start-btn").addEventListener("click",()=>{
   if(!v||!n){$("start-err").textContent="Bitte Vor- und Nachnamen eintragen.";return;}
   studentVorname=v; studentNachname=n;
   $("who-name").textContent=v+" "+n;
-  escapeMode=false; escapeRed=[]; renderMoodleHints();          // normaler Modus: keine roten Felder
+  escapeMode=false; escapeRed=[]; escapeCtx=null; renderMoodleHints();          // normaler Modus: keine roten Felder
   const tasks=Array.isArray(CFG.prefill)?CFG.prefill:[];
   prefilled=tasks.length>0;
   fillEditor(tasks, CFG.prefillLabels?(i=>"Aufgabe "+(i+1)):null);
@@ -2066,10 +2067,19 @@ const resumeDrop=$("resume-drop");
 resumeDrop.addEventListener("drop",e=>{const f=e.dataTransfer.files[0];if(f)readResumePdf(f);});
 
 /* ---------- Escape-Room-Modus: Aufgaben vorbefüllt (Autostart aus dem Escape-Room oder aus der Überblick-PDF) ---------- */
-function startEscapeMode(v,n,tasks,red){
+/* Steckbrief des Escape-Rooms für die KI-Bewertung im „Check des Feind(t)es“: Fach, Jahrgangsstufe, Thema, Name des
+   Escape-Rooms und die dort erarbeiteten Inhalte. Übernommen werden nur Texte mit begrenzter Länge. */
+function cleanEscapeCtx(c){
+  if(!c||typeof c!=="object") return null;
+  const s=(v,max)=>(typeof v==="string")?v.replace(/\s+/g," ").trim().slice(0,max):"";
+  const o={id:s(c.id,60),fach:s(c.fach,120),stufe:s(c.stufe,120),thema:s(c.thema,200),raum:s(c.raum,200),
+    inhalte:Array.isArray(c.inhalte)?c.inhalte.map(x=>s(x,400)).filter(Boolean).slice(0,12):[]};
+  return (o.fach||o.stufe||o.thema||o.raum||o.inhalte.length)?o:null;
+}
+function startEscapeMode(v,n,tasks,red,ctx){
   studentVorname=(v||"").trim(); studentNachname=(n||"").trim();
   $("who-name").textContent=(studentVorname+" "+studentNachname).trim();
-  escapeMode=true; escapeRed=Array.isArray(red)?red:[];
+  escapeMode=true; escapeRed=Array.isArray(red)?red:[]; escapeCtx=cleanEscapeCtx(ctx);
   const list=Array.isArray(tasks)?tasks:[];
   prefilled=list.length>0;
   fillEditor(list, i=>"Aufgabe "+(i+1));                         // vorbefüllte Aufgaben = feste Aufgabenblöcke
@@ -2089,7 +2099,7 @@ function readEscapePdf(file){
     let d;
     try{ d=JSON.parse(decodeURIComponent(escape(atob(mm[1])))); }
     catch(e){ $("esc-err").textContent="Die Escape-Room-Daten konnten nicht gelesen werden."; return; }
-    startEscapeMode(d.v,d.n,d.t,d.r);
+    startEscapeMode(d.v,d.n,d.t,d.r,d.c);
   };
   fr.onerror=()=>{$("esc-err").textContent="Datei konnte nicht gelesen werden.";};
   fr.readAsArrayBuffer(file);
@@ -2369,7 +2379,7 @@ $("code-input").addEventListener("keydown",e=>{if(e.key==="Enter")showTeacherRes
   if(!D) return;                                   // ohne Daten: normaler Anmeldebildschirm
   try{
     const red=Array.isArray(D.redFields)?D.redFields:(Array.isArray(D.red)?D.red:[]);
-    startEscapeMode(D.firstName, D.lastName, Array.isArray(D.tasks)?D.tasks:[], red);
+    startEscapeMode(D.firstName, D.lastName, Array.isArray(D.tasks)?D.tasks:[], red, D.ctx);
   }catch(e){ console.error("Escape-Auto-Start fehlgeschlagen:", e); }
 })();
 <\/script>
@@ -2691,6 +2701,7 @@ function generateOverviewPdf(){
     n: state.lastName,
     t: REFLECT_TASKS.slice(0, 6),
     r: RED_FIELDS,
+    c: ROOM_CONTEXT,
   };
   let escB64 = '';
   try { escB64 = btoa(unescape(encodeURIComponent(JSON.stringify(escData)))); } catch (e) { escB64 = ''; }
@@ -2701,6 +2712,32 @@ function generateOverviewPdf(){
 /* ============================================================
    PDF 2 — Reflexions-Datei
    ============================================================ */
+/* Steckbrief des Escape-Rooms für die KI-Bewertung im „Check des Feind(t)es“ (check.janrickmer.de).
+   PFLICHT in jedem Escape-Room (auch in neuen, die aus diesem kopiert werden):
+   - Der eingebettete Feiditor übernimmt ihn beim Öffnen (window.__ESCAPE_DATA__.ctx, siehe openFeiditor) und speichert
+     ihn verschlüsselt in der PDF (e.ctx); die Überblick-PDF trägt ihn in %ESCAPEDATA (Feld c).
+   - Der Check gibt ihn an die KI weiter: Jahrgangsstufe = Anspruchsniveau, „inhalte“ = Erwartungshorizont.
+   Felder: id (kurzer Schlüssel) · fach · stufe (ausdrückliche Jahrgangsstufe; im Zweifel bei der Lehrkraft nachfragen) ·
+   thema · raum (Name, wie ihn die Schüler:innen sehen) · inhalte (5–8 Punkte, nur Inhalte dieses Escape-Rooms aus Räumen
+   und Lösungserläuterungen, gegen diese Datei geprüft). Ein neuer Escape-Room braucht außerdem einen Eintrag in
+   ESCAPE_ROOMS (und seine Prüfkonstante in KNOWN_MAGIC) im Check – siehe CLAUDE.md im Repository des Checks. */
+const ROOM_CONTEXT = {
+  id: "jg8",
+  fach: "Politik und Wirtschaft",
+  stufe: "Jahrgangsstufe 8",
+  thema: "Fake News und Desinformation im Netz",
+  raum: "Der Fall @lichtenberg.leaks",
+  inhalte: [
+    "Desinformation (absichtlich falsch, will täuschen), Falschinformation (versehentlich weitergegeben), Satire (bewusst übertrieben, will unterhalten), Meinung (persönliche Bewertung); Schlüsselfrage: Absicht.",
+    "Täuschungssignale im Fall: angebliches „Geheimdokument“ ohne Beleg, Großbuchstaben, Alarm-Emojis, künstlicher Zeitdruck; Motiv des Accounts: mit Empörung Follower sammeln, mit Followern Geld verdienen.",
+    "Der Algorithmus von TikTok oder Instagram belohnt Interaktion; Beiträge mit starken Gefühlen (Empörung, Angst, Überraschung) erhalten so immer mehr Reichweite – er prüft nicht, ob etwas stimmt.",
+    "MIT-Studie (2018): Falschmeldungen erreichten 1.500 Menschen rund sechsmal schneller als wahre, da neuer und emotionaler; Filterblase und Echokammer verstärken das, KI-Bildgeneratoren erleichtern Fälschungen.",
+    "Vier Fragen an jede Quelle: Wer schreibt? Wem gehört sie? Wer bezahlt? Wer kontrolliert? NIUS: Chefredakteur Julian Reichelt, Geldgeber Frank Gotthardt (CDU-Großspender) – wie unabhängig ist NIUS?",
+    "Kritik an NIUS: reißerisch, irreführende Meldungen, erfundene Zitate (mit KI-Experimenten erklärt); Presserat kann NIUS nicht rügen (macht nicht mit), Medienanstalt Berlin-Brandenburg hat NIUS beanstandet.",
+    "„Doppelgänger“-Kampagne (Russland): Kopien bekannter Nachrichtenseiten, verbreitet per Fake-Konten, Social Bots; Ziele: Ängste verstärken, Gesellschaft spalten, Ukraine-Unterstützung schwächen, Wahlen beeinflussen.",
+    "5-Schritte-Check: Quelle & Impressum, Adresszeile (Endung), Datum (alte Meldungen), Bild-Rückwärtssuche (Herkunft des Fotos), Quervergleich & Faktenchecker (z. B. Correctiv); Likes sind kein Beweis.",
+  ]
+};
 const REFLECT_TASKS = [
   'Erkläre in eigenen Worten den Unterschied zwischen Desinformation, Falschinformation und Satire. Nenne zu jedem Begriff ein eigenes Beispiel. (Etappe 1)',
   'Stell dir vor, du sollst einem Sechstklässler erklären, warum sich Falschmeldungen auf TikTok oder Instagram oft schneller verbreiten als echte Nachrichten. Wie würdest du das in eigenen Worten erklären? (Etappe 2)',
@@ -2832,6 +2869,7 @@ window.openFeiditor=()=>{
       code:      state.code,
       tasks:     REFLECT_TASKS.slice(0,6),
       redFields: RED_FIELDS,
+      ctx:       ROOM_CONTEXT,
       overview:  {
         firstName:     state.firstName,
         lastName:      state.lastName,
